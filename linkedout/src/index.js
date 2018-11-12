@@ -1,16 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import Homepage from './containers/homepage/homepage'
+
 import {
     Route,
     Switch
 } from 'react-router';
+
 import {
     BrowserRouter as Router
-} from 'react-router-dom'
-import App from './App';
+} from 'react-router-dom';
+
 import * as serviceWorker from './serviceWorker';
+import './index.css';
+
 
 ReactDOM.render(
     <Router>

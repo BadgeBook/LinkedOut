@@ -1,44 +1,35 @@
 import React, { Component } from 'react';
-import 'homepage.css'
-import User from '../../model/user.js'
+import './homepage.css';
+import CardsList from '../../components/cardsList/cardsList';
+
 
 class Homepage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            users: [],
-        }
+            users: this.populateUsers(),
+        };
     }
 
-    populateUser = () => {
+    populateUsers = () => {
+        let temp = [];
         for (let i = 0; i < 10; i++) {
-            User.first_name = i + " First Name";
-            User.last_name = i + " Last Name";
-            User.user_description = i + " User description";
-            User.user_badges = ["badge1" + i, "badge2" + i, "badge3" + i];
-            let temp = this.state.users;
-            temp.append(User);
-            this.setState({
-                users: temp
+            temp.push({
+                first_name : i + " First Name",
+                last_name : i + " Last Name",
+                user_description : i + " User description",
+                user_badges : ["badge1" + i, "badge2" + i, "badge3" + i],
             });
         }
+        return temp;
     };
 
     render() {
-        this.populateUser();
         return (
             <div className="Homepage">
-                {this.state.users.map((user) => {
-                    return (
-                        <div>
-                            <p>{user.first_name}</p>
-                            <p>{user.last_name}</p>
-                            <p>{user.description}</p>
-                        </div>
-                    )
-                })}
+                <CardsList users={this.state.users} />
             </div>
-        )
+        );
     }
 }
 

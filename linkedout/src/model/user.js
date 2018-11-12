@@ -1,7 +1,9 @@
 import React from 'react';
-export default User = {
+const User = {
     first_name: "",
     last_name: "",
     user_description: "",
     user_badges: [],
 };
+
+export default User;
