@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import './profile.css';
-import SearchBar from '../../components/searchBar/searchBar';
+import SearchBar from '../../containers/searchBar/searchBar';
 import UserInfo from '../../components/userInfo/userInfo';
+import {BrowserRouter} from "react-router-dom";
 
 
 class Profile extends Component {
@@ -32,7 +33,7 @@ class Profile extends Component {
         return (
             <div className="Profile">
                 <div className="d-flex justify-content-center">
-                    <SearchBar onSearchClicked={this.onSearchClicked}/>
+                    <SearchBar history={this.props.history}/>
                 </div>
                 <div className="container">
                     <UserInfo user={this.state.user}/>
