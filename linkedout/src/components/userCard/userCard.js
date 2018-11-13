@@ -7,8 +7,8 @@ const UserCard = (props) => {
         <div className="UserCard col-sm-12 col-md-6">
             <div className="card">
                 <div className="card-body" onClick={() => console.log("card clicked")}>
-                    <h5 className="card-title">{props.user.first_name}</h5>
-                    <p className="card-text">{props.user.user_description}</p>
+                    <h5 className="card-title">{props.user.firstname}</h5>
+                    <p className="card-text">{props.user.lastname}</p>
                     <a href="#" className="btn btn-primary">Go somewhere</a>
                 </div>
             </div>

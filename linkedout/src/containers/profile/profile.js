@@ -17,11 +17,22 @@ class Profile extends Component {
         };
     }
 
+    onSearchClicked = (searchString) => {
+        if (searchString) {
+            console.log("Search for: " + searchString);
+            this.props.history.push({
+                pathname: '/search',
+                search: '?query=' + searchString,
+                state: {search: searchString}, 
+              })
+        }
+    };
+
     render() {
         return (
             <div className="Profile">
                 <div className="d-flex justify-content-center">
-                    <SearchBar />
+                    <SearchBar onSearchClicked={this.onSearchClicked}/>
                 </div>
                 <div className="container">
                     <UserInfo user={this.state.user}/>
