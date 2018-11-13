@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Homepage from './containers/homepage/homepage'
+import Profile from './containers/profile/profile'
 
 import {
     Route,
@@ -19,6 +20,7 @@ ReactDOM.render(
     <Router>
         <Switch>
             <Route exact path="/" component = {Homepage} />
+            <Route exact path="/profile" component = {Profile} />
         </Switch>
     </Router>,
     document.getElementById('root')
