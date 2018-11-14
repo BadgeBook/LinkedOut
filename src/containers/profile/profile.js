@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import './profile.css';
 import SearchBar from '../../containers/searchBar/searchBar';
 import UserInfo from '../../components/userInfo/userInfo';
-import {BrowserRouter} from "react-router-dom";
 
 
 class Profile extends Component {
@@ -10,7 +9,7 @@ class Profile extends Component {
         super(props);
         this.state = {
             user: {
-                picture: "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png",
+                picture: "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png",
                 firstname: "First Name",
                 lastname: "Last Name",
                 badges: ["badge1", "badge2", "badge3"],
