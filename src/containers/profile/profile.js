@@ -9,10 +9,11 @@ class Profile extends Component {
         super(props);
         this.state = {
             user: {
-                picture: "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png",
-                firstname: "First Name",
-                lastname: "Last Name",
+                firstname: "name1",
+                lastname: "lname",
+                picture: "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png",
                 badges: ["badge1", "badge2", "badge3"],
+                description: "Description of user 1",
             }
         };
     }
