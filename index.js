@@ -1,12 +1,13 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
+
 
 const app = express();
-const router = express.Router();
-
 app.use(cors({credentials: true, origin: true}));
+app.use(express.static(path.join(__dirname, 'client/build')));
 
-router.get('/users', (req, res, next) => {
+app.get('/api/users', (req, res, next) => {
     return res.json([{
         firstname: "name1",
         lastname: "lname",
@@ -30,7 +31,10 @@ router.get('/users', (req, res, next) => {
     }]);
 });
 
-app.use("/api", router);
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname+'/client/build/index.html'));
+  });
+
 app.listen(process.env.PORT || 4000, () => {
     console.log('Listening on port 4000');
 });
