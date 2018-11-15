@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import Homepage from './containers/homepage/homepage'
 import Profile from './containers/profile/profile'
 import SearchPage from './containers/searchPage/searchPage'
+import App from './App';
 
 import {
     Route,
