@@ -15,12 +15,16 @@ class SearchPage extends Component {
     }
 
     componentDidMount() {
-        axios.get('https://linkedout-4711.herokuapp.com/users')
+        this.getUsersFromDb();
+    }
+
+    getUsersFromDb = () => {
+        axios.get('/api/users')
             .then(response => this.setState({
                 users: response.data,
                 search: this.state.search
             }));
-    }
+      };
 
     render() {
         console.log("print state\n");
@@ -34,11 +38,11 @@ class SearchPage extends Component {
         let displayedUsers = [];
         if (this.state.users) {
             this.state.users.forEach(user => {
-                if (user.firstname.includes(this.state.search)) {
+                if (user.firstname.toLowerCase().includes(this.state.search.toLowerCase())) {
                     displayedUsers.push(user);
-                } else if (user.lastname.includes(this.state.search)) {
+                } else if (user.lastname.toLowerCase().includes(this.state.search.toLowerCase())) {
                     displayedUsers.push(user);
-                } else if (user.description.includes(this.state.search)) {
+                } else if (user.description.toLowerCase().includes(this.state.search.toLowerCase())) {
                     displayedUsers.push(user);
                 }
             });
