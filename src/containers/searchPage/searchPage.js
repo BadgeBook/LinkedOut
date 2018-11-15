@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import './searchPage.css';
 import CardsList from '../../components/cardsList/cardsList';
 
@@ -9,29 +10,21 @@ class SearchPage extends Component {
         if (this.props.location.state) {
             this.state = {
                 search: this.props.location.state.search,
-                users: [{ // dummy users while waiting for database implementation
-                    firstname: "name1",
-                    lastname: "lname",
-                    picture: "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png",
-                    badges: ["badge1", "badge2", "badge3"],
-                },
-                {
-                    firstname: "name2",
-                    lastname: "lname",
-                    picture: "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png",
-                    badges: ["badge1", "badge2", "badge3"],
-                },
-                {
-                    firstname: "name3",
-                    lastname: "lname",
-                    picture: "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png",
-                    badges: ["badge1", "badge2", "badge3"],
-                }],
             };
         }
     }
 
+    componentDidMount() {
+        axios.get('https://linkedout-4711.herokuapp.com/users')
+            .then(response => this.setState({
+                users: response.data,
+                search: this.state.search
+            }));
+    }
+
     render() {
+        console.log("print state\n");
+        console.log(this.state)
         // Redirect back to profile if search string is empty
         if (!this.props.location.state) {
             this.props.history.push('/profile');
@@ -39,12 +32,13 @@ class SearchPage extends Component {
 
         // Find users from the search query (quick mockup)
         let displayedUsers = [];
-        if (this.props.location.state) {
+        if (this.state.users) {
             this.state.users.forEach(user => {
-                if (user.firstname === this.state.search) {
+                if (user.firstname.includes(this.state.search)) {
                     displayedUsers.push(user);
-                }
-                if (user.lastname === this.state.search) {
+                } else if (user.lastname.includes(this.state.search)) {
+                    displayedUsers.push(user);
+                } else if (user.description.includes(this.state.search)) {
                     displayedUsers.push(user);
                 }
             });
