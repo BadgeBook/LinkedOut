@@ -18,18 +18,18 @@ import {
 import './index.css';
 
 
-// ReactDOM.render(
-//     <Router>
-//         <Switch>
-//             <Route exact path="/" component = {Homepage} />
-//             <Route exact path="/profile" component = {Profile} />
-//             <Route exact path="/search" component = {SearchPage} />
-//         </Switch>
-//     </Router>,
-//     document.getElementById('root')
-// );
+ReactDOM.render(
+    <Router>
+        <Switch>
+            <Route exact path="/" component = {Homepage} />
+            <Route exact path="/profile" component = {Profile} />
+            <Route exact path="/search" component = {SearchPage} />
+        </Switch>
+    </Router>,
+    document.getElementById('root')
+);
 
-ReactDOM.render(<App />, document.getElementById('root'));
+// ReactDOM.render(<App />, document.getElementById('root'));
 
 
 // If you want your app to work offline and load faster, you can change
