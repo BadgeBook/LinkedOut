@@ -34,10 +34,11 @@ class SearchPage extends Component {
         let displayedUsers = [];
         if (this.state.users) {
             this.state.users.forEach(user => {
-                if (user.firstname === this.state.search) {
+                if (user.firstname.includes(this.state.search)) {
                     displayedUsers.push(user);
-                }
-                if (user.lastname === this.state.search) {
+                } else if (user.lastname.includes(this.state.search)) {
+                    displayedUsers.push(user);
+                } else if (user.description.includes(this.state.search)) {
                     displayedUsers.push(user);
                 }
             });
