@@ -22,37 +22,15 @@ function testConnection() {
 }
 
 // SQL queries
-function setupDatabase() {
+//TODO implement asyc into database calls
+function createUser(firstName, lastName, picture, badges, description) {
     let db_connection = mysql.createConnection(db_config);
-    let sql = "CREATE DATABASE linkedout";
-
-    db_connection.query(sql, function (err, result) {
-        if (err) {
-            console.log("Error occurred while trying to create a database");
-            throw err
-        }
-        console.log("Created database");
-    });
-
-    sql = "CREATE TABLE users" +
-        "(userid   VARCHAR(10)" +
-        ",username VARCHAR(255)" +
-        ",password VARCHAR(255))";
-
-    db_connection.query(sql, function (err, result) {
-        if (err) {
-            console.log("Error occurred while trying to create a table");
-            throw err
-        }
-        console.log("Created table");
-    });
-
-    db_connection.end();
-}
-
-function createUser(userName) {
-    let db_connection = mysql.createConnection(db_config);
-    let sql = "INSERT INTO db (username) VALUES ('" + userName + "')";
+    let sql = "INSERT INTO user VALUES ('" +
+        firstName + "," +
+        lastName + "," +
+        picture + "," +
+        badges + "," +
+        description + "')";
 
     db_connection.query(sql, function (err, result) {
         if (err) {
@@ -65,9 +43,10 @@ function createUser(userName) {
     db_connection.end();
 }
 
+//TODO implement asyc into database calls
 function findUser(userName) {
     let db_connection = mysql.createConnection(db_config);
-    let sql = "SELECT * FROM db WHERE username =" + userName;
+    let sql = "SELECT * FROM user WHERE firstname = '" + userName + "'";
 
     db_connection.query(sql, function (err, result) {
         if (err) {
@@ -75,6 +54,7 @@ function findUser(userName) {
             throw err
         }
         console.log("Found user");
+        console.log(result);
     });
 
     db_connection.end();
