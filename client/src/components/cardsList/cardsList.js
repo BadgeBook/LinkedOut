@@ -7,9 +7,9 @@ const CardsList = (props) => {
         <div className="CardsList">
             <div className="container">
                 <div className="row">
-                    {props.users.map((user) => {
+                    {props.users.map((user, index) => {
                         return (
-                            <UserCard user = {user} />
+                            <UserCard user = {user} key={index} />
                         )
                     })}
                 </div>
