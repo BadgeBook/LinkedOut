@@ -1,0 +1,11 @@
+.LoginButtons {
+    display:inline-block;
+}
+
+.LoginButtons .errorMessage {
+    color: red;
+}
+
+.LoginButtons .successMessage {
+    color: green;
+}
