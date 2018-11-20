@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import './loginButtons.css';
 
 class LoginButtons extends Component {
@@ -10,20 +11,66 @@ class LoginButtons extends Component {
     }
 
     onLoginClicked = (username, password) => {
-        console.log(username);
-        console.log(password);
+        if (!username || !password) {
+            console.log("err message empty")
+            this.setState({
+                error: "Missing username or password"
+            })
+        } else {
+            this.setState({
+                username: username,
+                password: password
+            });
+            axios.post('/api/login', {
+                username: username,
+                password: password
+            })
+                .then(response => this.setState({
+                    userId: response.data,
+                }));
+        }
     };
 
     onSignupClicked = (username, password) => {
-        console.log(username);
-        console.log(password);
+        if (!username || !password) {
+            console.log("err message empty")
+            this.setState({
+                error: "Missing username or password"
+            })
+        } else {
+            this.setState({
+                username: username,
+                password: password
+            });
+            axios.post('/api/signup', {
+                username: username,
+                password: password
+            })
+                .then(response => this.setState({
+                    userId: response.data,
+                }));
+        }
     };
 
     render() {
         let userName = React.createRef();
         let password = React.createRef();
+
+        let errMessage;
+        if (this.state.error) {
+            errMessage = <h5 className="errorMessage">{this.state.error}</h5>
+        }
+
+        let successMessage;
+        if (this.state.userId) {
+            successMessage = <h5 className="successMessage">"Logged in!"</h5>
+            errMessage = ""
+        }
+        
         return (
             <div className="LoginButtons">
+                {errMessage}
+                {successMessage}
                 <form action="" className="login-form">
                     <label>
                         <input
