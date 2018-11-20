@@ -10,6 +10,7 @@ class SearchPage extends Component {
         if (this.props.location.state) {
             this.state = {
                 search: this.props.location.state.search,
+                users: []
             };
         }
     }
@@ -40,7 +41,7 @@ class SearchPage extends Component {
         // Display found users
         return (
             <div className="SearchPage">
-                <CardsList users={[this.state.users]}/>
+                <CardsList users={this.state.users}/>
             </div>
         );
     }
