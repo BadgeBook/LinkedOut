@@ -16,15 +16,18 @@ class SearchPage extends Component {
 
     componentDidMount() {
         this.getUsersFromDb();
+        this.sendSearchToDb();
     }
 
-    getUsersFromDb = () => {
-        axios.get('/api/users')
+    sendSearchToDb = () => {
+        axios.post('/api/search', {
+            search: this.state.search
+        })
             .then(response => this.setState({
                 users: response.data,
                 search: this.state.search
             }));
-      };
+    }
 
     render() {
         console.log("print state\n");
