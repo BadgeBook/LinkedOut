@@ -22,49 +22,60 @@ function testConnection() {
     db_connection.end();
 }
 
+
 // SQL queries
-//TODO implement asyc into database calls
-function createUser(firstName, lastName, picture, badges, description) {
+function search(query, callback) {
+    let db_connection = mysql.createConnection(db_config);
+    let words = query.toString().replace(/ /g, '|');
+
+    db_connection.query(
+        "SELECT * " +
+        "      FROM user " +
+        "     WHERE username REGEXP ?" +
+        "        OR fullname REGEXP ?" +
+        "        OR description REGEXP ?",
+        [words, words, words],
+        function (err, result) {
+            if (err) {
+                callback(err, null);
+            }
+            callback(null, JSON.stringify(result));
+        });
+
+    db_connection.end();
+}
+
+// Test
+// search("sql", function(err, res) {
+//     if (err) {
+//         console.log("error:", err);
+//     } else {
+//         console.log(res);
+//     }
+// });
+
+
+
+
+function createUser(userName, password, fullName, icon, description, callback) {
     let db_connection = mysql.createConnection(db_config);
     let sql = "INSERT INTO user VALUES ('" +
-        firstName + "," +
-        lastName + "," +
-        picture + "," +
-        badges + "," +
+        userName + "," +
+        password + "," +
+        fullName + "," +
+        icon + "," +
         description + "')";
 
     db_connection.query(sql, function (err, result) {
         if (err) {
-            console.log("Error occurred while trying to create a user");
-            throw err
-        }
-        console.log("Created user");
-    });
-
-    db_connection.end();
-}
-
-function findUser(userName, callback) {
-    let db_connection = mysql.createConnection(db_config);
-
-    let sqlQuery = "SELECT * FROM user WHERE firstname = '" + userName + "'";
-
-    db_connection.query(sqlQuery, (err, rows, fields) => {
-        if (err) {
             callback(err, null);
         }
-
-        callback(null, rows);
+        callback(null, result);
     });
 
     db_connection.end();
 }
 
-// Test calling the values
-findUser("name1", function(err, res) {
-    if (err) {
-        console.log(err);
-    } else {
-        console.log(res);
-    }
-});
+module.exports = {
+    search
+};
