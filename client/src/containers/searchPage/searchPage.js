@@ -15,7 +15,6 @@ class SearchPage extends Component {
     }
 
     componentDidMount() {
-        this.getUsersFromDb();
         this.sendSearchToDb();
     }
 
@@ -27,34 +26,21 @@ class SearchPage extends Component {
                 users: response.data,
                 search: this.state.search
             }));
-    }
+    };
 
     render() {
         console.log("print state\n");
-        console.log(this.state)
+        console.log(this.state);
+
         // Redirect back to profile if search string is empty
         if (!this.props.location.state) {
             this.props.history.push('/profile');
         }
 
-        // Find users from the search query (quick mockup)
-        let displayedUsers = [];
-        if (this.state.users) {
-            this.state.users.forEach(user => {
-                if (user.firstname.toLowerCase().includes(this.state.search.toLowerCase())) {
-                    displayedUsers.push(user);
-                } else if (user.lastname.toLowerCase().includes(this.state.search.toLowerCase())) {
-                    displayedUsers.push(user);
-                } else if (user.description.toLowerCase().includes(this.state.search.toLowerCase())) {
-                    displayedUsers.push(user);
-                }
-            });
-        }
-
         // Display found users
         return (
             <div className="SearchPage">
-                <CardsList users={displayedUsers}/>
+                <CardsList users={[this.state.users]}/>
             </div>
         );
     }
