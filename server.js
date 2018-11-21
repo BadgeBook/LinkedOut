@@ -25,12 +25,12 @@ app.post('/api/search', (req, res, next) => {
 });
 
 app.post('/api/signUp', (req, res, next) => {
-    db.signUp(req.body, function(err, userId) {
+    db.signUp(req.body, function(err, result) {
         if (err) {
             res.send(err);
             console.log("err");
         } else {
-            res.send(userId)
+            res.send(result)
         }
     });
 });

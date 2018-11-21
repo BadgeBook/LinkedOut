@@ -10,25 +10,21 @@ class LoginButtons extends Component {
         }
     }
 
-    onSignUpClicked = (username, password, fullname, description) => {
+    onSignUpClicked = (username, password) => {
         if (!username || !password) {
             this.setState({
-                error: "Missing username, password, or full name"
+                error: "Missing username or password"
             })
         } else {
             this.setState({
                 username: username,
-                password: password,
-                fullname: fullname,
-                description: description
+                password: password
             });
             axios.post('/api/signUp', {
                 username: username,
-                password: password,
-                fullname: fullname,
-                description: description
+                password: password
             })
-                .then(response => this.createUserSession(response.data));
+                .then(response => this.createUserSession(response.data.insertId));
         }
     };
 

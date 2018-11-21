@@ -34,9 +34,8 @@ function signUp(user, callback) {
     let db_connection = mysql.createConnection(db_config);
 
     db_connection.query(
-        "INSERT INTO user (username, password, fullname, description) " +
-        "VALUES(?, ?, ?, ?)",
-        [user.username, user.password, user.fullname, user.description],
+        "INSERT INTO user (username, password) VALUES(?, ?)",
+        [user.username, user.password],
         function (err, result) {
             if (err) {
                 callback(err, null);
