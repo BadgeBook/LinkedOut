@@ -10,30 +10,9 @@ class LoginButtons extends Component {
         }
     }
 
-    onLoginClicked = (username, password) => {
-        if (!username || !password) {
-            console.log("err message empty")
-            this.setState({
-                error: "Missing username or password"
-            })
-        } else {
-            this.setState({
-                username: username,
-                password: password
-            });
-            axios.post('/api/login', {
-                username: username,
-                password: password
-            })
-                .then(response => this.setState({
-                    userId: response.data,
-                }));
-        }
-    };
-
     onSignupClicked = (username, password) => {
         if (!username || !password) {
-            console.log("err message empty")
+            console.log("err message empty");
             this.setState({
                 error: "Missing username or password"
             })
@@ -43,6 +22,27 @@ class LoginButtons extends Component {
                 password: password
             });
             axios.post('/api/signup', {
+                username: username,
+                password: password
+            })
+                .then(response => this.setState({
+                    userId: response.data,
+                }));
+        }
+    };
+
+    onLoginClicked = (username, password) => {
+        if (!username || !password) {
+            console.log("err message empty");
+            this.setState({
+                error: "Missing username or password"
+            })
+        } else {
+            this.setState({
+                username: username,
+                password: password
+            });
+            axios.post('/api/login', {
                 username: username,
                 password: password
             })

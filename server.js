@@ -50,6 +50,26 @@ app.post('/api/search', (req, res, next) => {
     });
 });
 
+app.post('/api/signup', (req, res, next) => {
+    db.signup(req.body, function(err, data) {
+        if (err) {
+            res.send(err);
+        } else {
+            res.send(data)
+        }
+    });
+});
+
+app.post('/api/login', (req, res, next) => {
+    db.login(req.body, function(err, data) {
+        if (err) {
+            res.send(err);
+        } else {
+            res.send(data)
+        }
+    });
+});
+
 app.listen(process.env.PORT || 4000, () => {
     console.log('Listening on port 4000');
 });

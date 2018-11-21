@@ -45,37 +45,63 @@ function search(query, callback) {
     db_connection.end();
 }
 
-// Test
-// search("sql", function(err, res) {
-//     if (err) {
-//         console.log("error:", err);
-//     } else {
-//         console.log(res);
-//     }
-// });
-
-
-
-
-function createUser(userName, password, fullName, icon, description, callback) {
+function signup(user_info, callback) {
     let db_connection = mysql.createConnection(db_config);
-    let sql = "INSERT INTO user VALUES ('" +
-        userName + "," +
-        password + "," +
-        fullName + "," +
-        icon + "," +
-        description + "')";
+    let user = JSON.stringify(user_info);
 
-    db_connection.query(sql, function (err, result) {
-        if (err) {
-            callback(err, null);
-        }
-        callback(null, result);
-    });
+    db_connection.query(
+        "INSERT INTO user VALUES('" +
+        "    ?," +
+        "    ?," +
+        "    NULL," +
+        "    ?')",
+        [user.username, user.password, user.fullname, user.description],
+        function (err, result) {
+            if (err) {
+                callback(err, null);
+            }
+            callback(null, result);
+        });
 
     db_connection.end();
 }
 
+function login(user_info, callback) {
+    let db_connection = mysql.createConnection(db_config);
+    let user = JSON.stringify(user_info);
+
+    db_connection.query(
+        "SELECT * " +
+        "      FROM user " +
+        "     WHERE username == ?" +
+        "       AND password == ?",
+        [user[0], user[1]],
+        function (err, result) {
+            if (err) {
+                callback(err, null);
+            }
+            callback(null, JSON.stringify(result));
+        });
+
+    db_connection.end();
+}
+
+// test query
+let test_user = {
+    username:"not_alex",
+    password:"fish",
+    fullname:"alex hsu",
+    description:"i like delphi"
+};
+
+signup(test_user,function(err, res) {
+    if (err) {
+        console.log("error:", err);
+    } else {
+        console.log(res);
+    }
+});
+
 module.exports = {
-    search
+    search, signup, login
 };
