@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './homepage.css';
 import SearchBar from '../../containers/searchBar/searchBar';
-import LoginButtons from '../../containers/loginButtons/loginButtons';
+import LoginButtons from '../authenticate/authenticate';
 
 
 class Homepage extends Component {

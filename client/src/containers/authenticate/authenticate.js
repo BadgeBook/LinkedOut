@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import './loginButtons.css';
+import './authenticate.css';
 
 class LoginButtons extends Component {
     constructor(props) {
@@ -12,7 +12,6 @@ class LoginButtons extends Component {
 
     onLoginClicked = (username, password) => {
         if (!username || !password) {
-            console.log("err message empty")
             this.setState({
                 error: "Missing username or password"
             })
@@ -33,7 +32,6 @@ class LoginButtons extends Component {
 
     onSignupClicked = (username, password) => {
         if (!username || !password) {
-            console.log("err message empty")
             this.setState({
                 error: "Missing username or password"
             })
@@ -46,10 +44,23 @@ class LoginButtons extends Component {
                 username: username,
                 password: password
             })
-                .then(response => this.setState({
-                    userId: response.data,
-                }));
+                .then(response => this.createUserSession(response.data));
         }
+    };
+
+    createUserSession = (response) => {
+        if (!response.userId) {
+            this.setState({
+                error: response.errorMessage
+            });
+            return;
+        }
+
+        this.setState({
+            userId: response.userId,
+        });
+
+        sessionStorage.setItem("_id", userId);
     };
 
     render() {
@@ -63,7 +74,7 @@ class LoginButtons extends Component {
 
         let successMessage;
         if (this.state.userId) {
-            successMessage = <h5 className="successMessage">"Logged in!"</h5>
+            successMessage = <h5 className="successMessage">"Logged in!"</h5>;
             errMessage = ""
         }
         
