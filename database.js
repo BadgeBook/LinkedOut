@@ -91,26 +91,26 @@ function updateUser(user, callback) {
     let db_query = "UPDATE user SET ";
     let db_query_values = [];
 
-    if (user.fullname) {
+    if (user.user.fullname) {
         db_query = db_query.concat("fullname = ? ");
-        db_query_values.push(user.fullname);
+        db_query_values.push(user.user.fullname);
     }
-    if (user.icon) {
-        if (user.fullname) {
+    if (user.user.icon) {
+        if (user.user.fullname) {
             db_query = db_query.concat(",");
         }
         db_query = db_query.concat("icon = ? ");
-        db_query_values.push(user.icon);
+        db_query_values.push(user.user.icon);
     }
-    if (user.description) {
-        if (user.fullname || user.icon) {
+    if (user.user.description) {
+        if (user.user.fullname || user.icon) {
             db_query = db_query.concat(",");
         }
         db_query = db_query.concat("description = ? ");
-        db_query_values.push(user.description);
+        db_query_values.push(user.user.description);
     }
     db_query = db_query.concat("WHERE id = ?");
-    db_query_values.push(user.userId);
+    db_query_values.push(user.user.userId);
 
     db_connection.query(db_query, db_query_values,
         function (err, result) {

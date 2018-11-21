@@ -57,7 +57,6 @@ app.post('/api/getUser', (req, res, next) => {
 });
 
 app.post('/api/updateUser', (req, res, next) => {
-    console.log(req.body);
     db.updateUser(req.body, function(err, success) {
         if (err) {
             res.send(err);
