@@ -61,11 +61,11 @@ app.post('/api/signUp', (req, res, next) => {
 });
 
 app.post('/api/login', (req, res, next) => {
-    db.login(req.body, function(err, data) {
+    db.login(req.body, function(err, userID) {
         if (err) {
             res.send(err);
         } else {
-            res.send(data)
+            res.send(userID)
         }
     });
 });

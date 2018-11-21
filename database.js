@@ -63,41 +63,24 @@ function signUp(user, callback) {
     db_connection.end();
 }
 
-function login(user_info, callback) {
+function login(user, callback) {
     let db_connection = mysql.createConnection(db_config);
-    let user = JSON.stringify(user_info);
 
     db_connection.query(
-        "SELECT * " +
+        "SELECT id " +
         "      FROM user " +
-        "     WHERE username == ?" +
-        "       AND password == ?",
-        [user[0], user[1]],
+        "     WHERE username = ?" +
+        "       AND password = ?",
+        [user.username, user.password],
         function (err, result) {
             if (err) {
                 callback(err, null);
             }
-            callback(null, JSON.stringify(result));
+            callback(null, result.id);
         });
 
     db_connection.end();
 }
-
-// test query
-let test_user = {
-    username:"not_alex",
-    password:"fish",
-    fullname:"alex hsu",
-    description:"i know delphi"
-};
-
-signUp(test_user,function(err, res) {
-    if (err) {
-        console.log("error:", err);
-    } else {
-        console.log(res);
-    }
-});
 
 module.exports = {
     search, signUp, login
