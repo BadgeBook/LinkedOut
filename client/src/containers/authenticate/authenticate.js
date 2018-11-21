@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import './authenticate.css';
 
-class LoginButtons extends Component {
+class Authenticate extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -77,7 +77,7 @@ class LoginButtons extends Component {
         }
         
         return (
-            <div className="LoginButtons">
+            <div className="Authenticate">
                 {errMessage}
                 {successMessage}
                 <form action="" className="login-form">
@@ -119,4 +119,4 @@ class LoginButtons extends Component {
     }
 }
 
-export default LoginButtons;
+export default Authenticate;

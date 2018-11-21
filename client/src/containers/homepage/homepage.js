@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './homepage.css';
 import SearchBar from '../../containers/searchBar/searchBar';
-import LoginButtons from '../authenticate/authenticate';
+import Authenticate from '../authenticate/authenticate';
 
 
 class Homepage extends Component {
@@ -13,7 +13,7 @@ class Homepage extends Component {
         return (
             <div className="Homepage">
                 <div className="login d-flex justify-content-center">
-                    <LoginButtons history={this.props.history}/>
+                    <Authenticate history={this.props.history}/>
                 </div>
                 <div className="d-flex justify-content-center">
                     <SearchBar history={this.props.history}/>

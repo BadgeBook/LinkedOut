@@ -1,11 +1,11 @@
-.LoginButtons {
+.Authenticate {
     display:inline-block;
 }
 
-.LoginButtons .errorMessage {
+.Authenticate .errorMessage {
     color: red;
 }
 
-.LoginButtons .successMessage {
+.Authenticate .successMessage {
     color: green;
 }
