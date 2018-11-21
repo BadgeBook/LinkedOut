@@ -41,7 +41,7 @@ function signUp(user, callback) {
             if (err) {
                 callback(err, null);
             }
-            callback(null, result.insertId);
+            callback(null, result);
         });
 
     db_connection.end();
@@ -60,7 +60,7 @@ function login(user, callback) {
             if (err) {
                 callback(err, null);
             }
-            callback(null, result.id);
+            callback(null, result);
         });
 
     db_connection.end();

@@ -35,11 +35,11 @@ app.post('/api/signUp', (req, res, next) => {
 });
 
 app.post('/api/login', (req, res, next) => {
-    db.login(req.body, function(err, userID) {
+    db.login(req.body, function(err, userId) {
         if (err) {
             res.send(err);
         } else {
-            res.send(userID)
+            res.send(userId)
         }
     });
 });

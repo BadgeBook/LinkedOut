@@ -30,7 +30,7 @@ class LoginButtons extends Component {
                 description: description
             })
                 .then(response => this.setState({
-                    userId: response,
+                    userId: response.data,
                 }));
         }
     };
