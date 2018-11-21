@@ -42,23 +42,26 @@ class Authenticate extends Component {
                 username: username,
                 password: password
             })
-                .then(response => this.createUserSession(response.data[0]));
+                .then(response => this.createUserSession(response.data[0].id));
         }
     };
 
-    createUserSession = (response) => {
-        if (!response.id) {
+    // @TODO Change to response.id when response is fixed
+    createUserSession = (id) => {
+        if (!id) {
             this.setState({
-                error: response.errorMessage
+                // @TODO Reinplement the error when response is fixed
+                // error: response.errorMessage
             });
             return;
         }
 
         this.setState({
-            userId: response.id,
+            userId: id,
         });
 
-        sessionStorage.setItem("_id", response.id);
+        sessionStorage.clear();
+        sessionStorage.setItem("_id", id);
     };
 
     render() {
