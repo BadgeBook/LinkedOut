@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './profile.css';
 import SearchBar from '../../containers/searchBar/searchBar';
-import UserInfo from '../../components/userInfo/userInfo';
+import UserInfo from '../userInfo/userInfo';
 import axios from "axios/index";
 
 
