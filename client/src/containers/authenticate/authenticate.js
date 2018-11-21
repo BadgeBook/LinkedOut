@@ -10,6 +10,28 @@ class LoginButtons extends Component {
         }
     }
 
+    onSignUpClicked = (username, password, fullname, description) => {
+        if (!username || !password) {
+            this.setState({
+                error: "Missing username, password, or full name"
+            })
+        } else {
+            this.setState({
+                username: username,
+                password: password,
+                fullname: fullname,
+                description: description
+            });
+            axios.post('/api/signUp', {
+                username: username,
+                password: password,
+                fullname: fullname,
+                description: description
+            })
+                .then(response => this.createUserSession(response.data));
+        }
+    };
+
     onLoginClicked = (username, password) => {
         if (!username || !password) {
             this.setState({
@@ -24,32 +46,12 @@ class LoginButtons extends Component {
                 username: username,
                 password: password
             })
-                .then(response => this.setState({
-                    userId: response.data,
-                }));
-        }
-    };
-
-    onSignupClicked = (username, password) => {
-        if (!username || !password) {
-            this.setState({
-                error: "Missing username or password"
-            })
-        } else {
-            this.setState({
-                username: username,
-                password: password
-            });
-            axios.post('/api/signup', {
-                username: username,
-                password: password
-            })
-                .then(response => this.createUserSession(response.data));
+                .then(response => this.createUserSession(response.data[0]));
         }
     };
 
     createUserSession = (response) => {
-        if (!response.userId) {
+        if (!response.id) {
             this.setState({
                 error: response.errorMessage
             });
@@ -57,10 +59,10 @@ class LoginButtons extends Component {
         }
 
         this.setState({
-            userId: response.userId,
+            userId: response.id,
         });
 
-        sessionStorage.setItem("_id", response.userId);
+        sessionStorage.setItem("_id", response.id);
     };
 
     render() {
@@ -112,7 +114,7 @@ class LoginButtons extends Component {
                     className="btn btn-info"
                     type="button"
                     onClick={() => {
-                        this.onSignupClicked(userName.current.value, password.current.value)
+                        this.onSignUpClicked(userName.current.value, password.current.value, "", "")
                     }}>
                     Sign Up
                 </button>

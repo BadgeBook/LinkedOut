@@ -81,6 +81,9 @@ class UserInfo extends Component {
     };
 
     render() {
+        // @TODO Temp
+        let badges = ["badge1", "badge2", "badge3"];
+
         let descriptionText = null;
         let descriptionButton = null;
 
@@ -118,7 +121,7 @@ class UserInfo extends Component {
                                 </row>
                             </div>
                             <div className="col-md-2 profile-info">
-                                <BadgeList badges={this.state.user.badges}/>
+                                <BadgeList badges={badges}/>
                             </div>
                         </div>
                     </div>

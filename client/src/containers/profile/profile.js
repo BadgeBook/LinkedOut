@@ -38,7 +38,7 @@ class Profile extends Component {
                         <SearchBar history={this.props.history}/>
                     </div>
                     <div className="container">
-                        <UserInfo user={this.state.user}/>
+                        <UserInfo user={this.state.user[0]}/>
                     </div>
                 </div>
             );
