@@ -82,6 +82,24 @@ function login(user, callback) {
     db_connection.end();
 }
 
+function getUser(user, callback) {
+    let db_connection = mysql.createConnection(db_config);
+
+    db_connection.query(
+        "SELECT fullname, icon, description " +
+        "      FROM user " +
+        "     WHERE id = ?",
+        [user.userId],
+        function (err, result) {
+            if (err) {
+                callback(err, null);
+            }
+            callback(null, JSON.stringify(result));
+        });
+
+    db_connection.end();
+}
+
 module.exports = {
-    search, signUp, login
+    search, signUp, login, getUser
 };

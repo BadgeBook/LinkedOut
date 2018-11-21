@@ -44,6 +44,16 @@ app.post('/api/login', (req, res, next) => {
     });
 });
 
+app.post('/api/getUser', (req, res, next) => {
+    db.getUser(req.body, function(err, user) {
+        if (err) {
+            res.send(err);
+        } else {
+            res.send(user)
+        }
+    });
+});
+
 app.listen(process.env.PORT || 4000, () => {
     console.log('Listening on port 4000');
 });
