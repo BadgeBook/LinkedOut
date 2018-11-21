@@ -100,6 +100,53 @@ function getUser(user, callback) {
     db_connection.end();
 }
 
+function updateUser(user, callback) {
+    let db_connection = mysql.createConnection(db_config);
+    let db_query = "UPDATE user SET ";
+    let db_query_values = [];
+
+    if (user.fullname) {
+        db_query = db_query.concat("fullname = ? ");
+        db_query_values.push(user.fullname);
+    }
+    if (user.icon) {
+        if (user.fullname) {
+            db_query = db_query.concat(",");
+        }
+        db_query = db_query.concat("icon = ? ");
+        db_query_values.push(user.icon);
+    }
+    if (user.description) {
+        if (user.fullname || user.icon) {
+            db_query = db_query.concat(",");
+        }
+        db_query = db_query.concat("description = ? ");
+        db_query_values.push(user.description);
+    }
+    db_query = db_query.concat("WHERE id = ?");
+    db_query_values.push(user.userId);
+
+    db_connection.query(db_query, db_query_values,
+        function (err, result) {
+            if (err) {
+                callback(err, null);
+            }
+            if(result.changedRows === 0) {
+                callback("Error: data was identical", null);
+            } else if (result.changedRows === 1) {
+                getUser(user, function(err, user) {
+                    if (err) {
+                        callback(err, null)
+                    } else {
+                        callback(null, user)
+                    }
+                });
+            }
+        });
+
+    db_connection.end();
+}
+
 module.exports = {
-    search, signUp, login, getUser
+    search, signUp, login, getUser, updateUser
 };
