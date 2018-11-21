@@ -8,21 +8,6 @@ const db_config = {
     database: "heroku_cd62da7d23be6d3"
 };
 
-function testConnection() {
-    let db_connection = mysql.createConnection(db_config);
-
-    db_connection.connect(function(err) {
-        if (err) {
-            console.log("Error occurred while trying to connect to database");
-            throw err
-        }
-        console.log("Connected to database");
-    });
-
-    db_connection.end();
-}
-
-
 // SQL queries
 function search(query, callback) {
     let db_connection = mysql.createConnection(db_config);
@@ -49,8 +34,7 @@ function signUp(user, callback) {
     let db_connection = mysql.createConnection(db_config);
 
     db_connection.query(
-        "INSERT INTO user " +
-        "(username, password, fullname, description) " +
+        "INSERT INTO user (username, password, fullname, description) " +
         "VALUES(?, ?, ?, ?)",
         [user.username, user.password, user.fullname, user.description],
         function (err, result) {
@@ -94,6 +78,8 @@ function getUser(user, callback) {
             if (err) {
                 callback(err, null);
             }
+            //TODO fix hardcoded badges array
+            result["badges"] = ["badge1", "badge2", "badge3"];
             callback(null, JSON.stringify(result));
         });
 
