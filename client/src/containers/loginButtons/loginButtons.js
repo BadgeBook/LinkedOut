@@ -10,23 +10,27 @@ class LoginButtons extends Component {
         }
     }
 
-    onSignupClicked = (username, password) => {
-        if (!username || !password) {
+    onSignUpClicked = (username, password, fullname, description) => {
+        if (!username || !password || !fullname) {
             console.log("err message empty");
             this.setState({
-                error: "Missing username or password"
+                error: "Missing username, password, or full name"
             })
         } else {
             this.setState({
                 username: username,
-                password: password
+                password: password,
+                fullname: fullname,
+                description: description
             });
-            axios.post('/api/signup', {
+            axios.post('/api/signUp', {
                 username: username,
-                password: password
+                password: password,
+                fullname: fullname,
+                description: description
             })
                 .then(response => this.setState({
-                    userId: response.data,
+                    userId: response,
                 }));
         }
     };
@@ -101,7 +105,7 @@ class LoginButtons extends Component {
                     className="btn btn-info"
                     type="button"
                     onClick={() => {
-                        this.onSignupClicked(userName.current.value, password.current.value)
+                        this.onSignUpClicked(userName.current.value, password.current.value, "fullname", "description")
                     }}>
                     Sign Up
                 </button>

@@ -45,22 +45,19 @@ function search(query, callback) {
     db_connection.end();
 }
 
-function signup(user_info, callback) {
+function signUp(user, callback) {
     let db_connection = mysql.createConnection(db_config);
-    let user = JSON.stringify(user_info);
 
     db_connection.query(
-        "INSERT INTO user VALUES('" +
-        "    ?," +
-        "    ?," +
-        "    NULL," +
-        "    ?')",
+        "INSERT INTO user " +
+        "(username, password, fullname, description) " +
+        "VALUES(?, ?, ?, ?)",
         [user.username, user.password, user.fullname, user.description],
         function (err, result) {
             if (err) {
                 callback(err, null);
             }
-            callback(null, result);
+            callback(null, result.insertId);
         });
 
     db_connection.end();
@@ -91,10 +88,10 @@ let test_user = {
     username:"not_alex",
     password:"fish",
     fullname:"alex hsu",
-    description:"i like delphi"
+    description:"i know delphi"
 };
 
-signup(test_user,function(err, res) {
+signUp(test_user,function(err, res) {
     if (err) {
         console.log("error:", err);
     } else {
@@ -103,5 +100,5 @@ signup(test_user,function(err, res) {
 });
 
 module.exports = {
-    search, signup, login
+    search, signUp, login
 };
