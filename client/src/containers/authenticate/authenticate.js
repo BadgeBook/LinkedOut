@@ -60,7 +60,7 @@ class LoginButtons extends Component {
             userId: response.userId,
         });
 
-        sessionStorage.setItem("_id", userId);
+        sessionStorage.setItem("_id", response.userId);
     };
 
     render() {

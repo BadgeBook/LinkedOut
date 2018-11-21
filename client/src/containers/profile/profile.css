@@ -6,3 +6,7 @@
 .Profile .container {
     margin-top: 2vh;
 }
+
+.Profile .not-signed-in-message {
+    color: red;
+}
