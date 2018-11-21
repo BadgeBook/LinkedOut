@@ -55,11 +55,11 @@ app.post('/api/getUser', (req, res, next) => {
 });
 
 app.post('/api/updateUser', (req, res, next) => {
-    db.updateUser(req.body, function(err, user) {
+    db.updateUser(req.body, function(err, success) {
         if (err) {
             res.send(err);
         } else {
-            res.send(user)
+            res.send(success)
         }
     });
 });

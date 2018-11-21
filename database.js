@@ -120,13 +120,7 @@ function updateUser(user, callback) {
             if(result.changedRows === 0) {
                 callback("Error: data was identical", null);
             } else if (result.changedRows === 1) {
-                getUser(user, function(err, user) {
-                    if (err) {
-                        callback(err, null)
-                    } else {
-                        callback(null, user)
-                    }
-                });
+                callback(null, "Success: user updated")
             }
         });
 
