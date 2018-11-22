@@ -24,7 +24,9 @@ class Authenticate extends Component {
                 username: username,
                 password: password
             })
-                .then(response => this.createUserSession(response.data.insertId));
+                .then(response => {
+                    this.createUserSession(response)
+                });
         }
     };
 
@@ -42,26 +44,26 @@ class Authenticate extends Component {
                 username: username,
                 password: password
             })
-                .then(response => this.createUserSession(response.data[0].id));
+                .then(response => {
+                    this.createUserSession(response)
+                });
         }
     };
 
-    // @TODO Change to response.id when response is fixed
-    createUserSession = (id) => {
-        if (!id) {
+    createUserSession = (response) => {
+        if (!response.data.id) {
             this.setState({
-                // @TODO Reinplement the error when response is fixed
-                // error: response.errorMessage
+                error: response.data.errorMessage
             });
             return;
         }
 
         this.setState({
-            userId: id,
+            userId: response.data.id,
         });
 
         sessionStorage.clear();
-        sessionStorage.setItem("_id", id);
+        sessionStorage.setItem("_id", response.data.id);
     };
 
     render() {
@@ -113,7 +115,7 @@ class Authenticate extends Component {
                     className="btn btn-info"
                     type="button"
                     onClick={() => {
-                        this.onSignUpClicked(userName.current.value, password.current.value, "", "")
+                        this.onSignUpClicked(userName.current.value, password.current.value)
                     }}>
                     Sign Up
                 </button>

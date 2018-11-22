@@ -40,7 +40,7 @@ function signUp(user, callback) {
             if (err) {
                 callback(err, null);
             }
-            callback(null, result);
+            callback(null, {id: result.insertId});
         });
 
     db_connection.end();
@@ -59,7 +59,7 @@ function login(user, callback) {
             if (err) {
                 callback(err, null);
             }
-            callback(null, result);
+            callback(null, {id: result[0].id});
         });
 
     db_connection.end();

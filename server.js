@@ -6,7 +6,6 @@ const db = require('./database');
 const app = express();
 
 app.use(express.json());
-app.use(express.urlencoded());
 app.use(cors({credentials: true, origin: true}));
 app.use(express.static(path.join(__dirname, 'client/build')));
 
@@ -25,12 +24,11 @@ app.post('/api/search', (req, res, next) => {
 });
 
 app.post('/api/signUp', (req, res, next) => {
-    db.signUp(req.body, function(err, result) {
+    db.signUp(req.body, function(err, userId) {
         if (err) {
             res.send(err);
-            console.log("err");
         } else {
-            res.send(result)
+            res.send(userId)
         }
     });
 });
@@ -38,7 +36,6 @@ app.post('/api/signUp', (req, res, next) => {
 app.post('/api/login', (req, res, next) => {
     db.login(req.body, function(err, userId) {
         if (err) {
-            console.log("err");
             res.send(err);
         } else {
             res.send(userId)
