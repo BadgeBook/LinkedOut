@@ -142,6 +142,27 @@ function getApplications(res, callback) {
     db_connection.end();
 }
 
+function getUserApplications(user, callback) {
+    let db_connection = mysql.createConnection(db_config);
+
+    db_connection.query(
+        "SELECT u.id AS user_id, " +
+        "    u.username, a.APIurl, a.outgoingToken" +
+        "     FROM user u " +
+        "     JOIN application_user au ON u.id = au.user_id" +
+        "     JOIN application a ON au.application_id" +
+        "     WHERE u.id = ?",
+        [user.userId],
+        function (err, result) {
+            if (err) {
+                callback(err, null);
+            }
+            callback(null, JSON.stringify(result));
+        });
+
+    db_connection.end();
+}
+
 module.exports = {
-    search, signUp, login, getUser, updateUser, getApplications
+    search, signUp, login, getUser, updateUser, getApplications, getUserApplications
 };

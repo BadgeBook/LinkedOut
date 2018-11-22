@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const db = require('./database');
+const axios = require('axios');
 
 const app = express();
 
@@ -75,6 +76,29 @@ app.post('/api/getApplications', (req, res, next) => {
         }
     });
 });
+
+app.post('/api/getUserBadges', (req, res, next) => {
+    db.getUserApplications(req.body, function(err, user) {
+        if (err) {
+            res.send(err);
+        } else {
+            user = JSON.parse(user)
+            for(i=0; i<user.length; i++) {
+                axios.post(String(user[i].APIurl), {
+                    userid: String(user[i].username),
+                    apptoken: String(user[i].outgoingToken)
+                  })
+                .then(response => {
+                    console.log(response.data);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+            }
+            res.send(user)
+        }
+    });
+})
 
 app.listen(process.env.PORT || 4000, () => {
     console.log('Listening on port 4000');

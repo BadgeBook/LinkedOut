@@ -28,6 +28,13 @@ class Profile extends Component {
                 isLoggedIn: true,
                 user: response.data
             }));
+        axios.post('/api/getUserBadges', {
+                userId: userId
+        })
+            .then(response => this.setState({
+                badges: response.data
+            }));
+            
     };
 
     render() {
