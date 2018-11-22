@@ -11,7 +11,7 @@ const AppList = (props) => {
                                 <img className="card-img-top" src={props.applications.icon} alt="Card image cap"></img>
                                 <div className="card-body" onClick={() => console.log("card clicked")}>
                                     <h5 className="card-title">{props.applications.name}</h5>
-                                    <a href="#" className="btn btn-primary">Go to app</a>
+                                    <a href={props.applications.URL} className="btn btn-primary">Go to app</a>
                                 </div>
                             </div>
                         )
