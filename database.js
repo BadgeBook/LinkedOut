@@ -126,6 +126,22 @@ function updateUser(user, callback) {
     db_connection.end();
 }
 
+function getApplications(res, callback) {
+    let db_connection = mysql.createConnection(db_config);
+
+    db_connection.query(
+        "SELECT *" +
+        "      FROM application ",
+        function (err, result) {
+            if (err) {
+                callback(err, null);
+            }
+            callback(null, JSON.stringify(result));
+        });
+
+    db_connection.end();
+}
+
 module.exports = {
-    search, signUp, login, getUser, updateUser
+    search, signUp, login, getUser, updateUser, getApplications
 };

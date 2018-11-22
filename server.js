@@ -66,6 +66,16 @@ app.post('/api/updateUser', (req, res, next) => {
     });
 });
 
+app.post('/api/getApplications', (req, res, next) => {
+    db.getApplications(req.body, function(err, data) {
+        if (err) {
+            res.send(err);
+        } else {
+            res.send(data)
+        }
+    });
+});
+
 app.listen(process.env.PORT || 4000, () => {
     console.log('Listening on port 4000');
 });
