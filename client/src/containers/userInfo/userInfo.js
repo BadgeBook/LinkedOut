@@ -81,9 +81,6 @@ class UserInfo extends Component {
     };
 
     render() {
-        // @TODO Temp
-        let badges = ["badge1", "badge2", "badge3"];
-
         let descriptionText = null;
         let descriptionButton = null;
 
@@ -102,32 +99,47 @@ class UserInfo extends Component {
                 Update Description
             </button>;
         }
-
-        return (
-            <div className="UserInfo">
-                <div className="card jumbotron">
-                    <div className="card-body">
-                        <div className="row">
-                            <div className="col-md-3">
-                                <img alt="..." className="img-thumbnail" src={this.state.user.icon}/>
-                            </div>
-                            <div className="col-md-6 profile-info">
-                                <row>
-                                    <h2 className="card-title">{this.state.user.fullname}</h2>
-                                    <div>
-                                        {descriptionText}
-                                        {descriptionButton}
-                                    </div>
-                                </row>
-                            </div>
-                            <div className="col-md-2 profile-info">
-                                <BadgeList badges={badges}/>
+        if(this.state.user.badges) {
+            let i;
+            for (i=0; i<this.state.user.badges.length; i++) {
+                if (i!=1) {
+                    this.state.user.badges[i] = JSON.stringify(this.state.user.badges[i])
+                }
+            }
+            return (
+                <div className="UserInfo">
+                    <div className="card jumbotron">
+                        <div className="card-body">
+                            <div className="row">
+                                <div className="col-md-3">
+                                    <img alt="..." className="img-thumbnail" src={this.state.user.icon}/>
+                                </div>
+                                <div className="col-md-6 profile-info">
+                                    <row>
+                                        <h2 className="card-title">{this.state.user.fullname}</h2>
+                                        <div>
+                                            {descriptionText}
+                                            {descriptionButton}
+                                        </div>
+                                    </row>
+                                </div>
+                                <div className="col-md-2 profile-info">
+                                    <BadgeList badges={this.state.user.badges}/>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        );
+            );
+        }
+        else {
+            console.log("got here")
+            return (
+                <div className="UserInfo">
+                    <div className="waiting"><h1>Wait...</h1></div>
+                </div>
+            )
+        }
     }
 }
 
