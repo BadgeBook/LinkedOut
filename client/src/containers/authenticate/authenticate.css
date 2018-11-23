@@ -1,0 +1,11 @@
+.Authenticate {
+    display:inline-block;
+}
+
+.Authenticate .errorMessage {
+    color: red;
+}
+
+.Authenticate .successMessage {
+    color: green;
+}

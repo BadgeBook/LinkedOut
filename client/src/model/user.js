@@ -1,9 +1,9 @@
 import React from 'react';
 const User = {
-    first_name: "",
-    last_name: "",
-    user_description: "",
-    user_badges: [],
+    username: "",
+    fullname: "",
+    icon: "",
+    description: ""
 };
 
 export default User;

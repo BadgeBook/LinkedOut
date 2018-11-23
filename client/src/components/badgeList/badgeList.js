@@ -7,7 +7,7 @@ const BadgeList = (props) => {
             <ul className="list-group list-group-flush">
                {props.badges.map((badge, index) => {
                     return(
-                        <span class="badge badge-pill badge-warning" key={index}>{badge}</span>
+                        <span className="badge badge-pill badge-warning" key={index}>{badge}</span>
                     );
                 })}
             </ul>
