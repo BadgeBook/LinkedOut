@@ -11,9 +11,9 @@ app.use(express.urlencoded());
 app.use(cors({credentials: true, origin: true}));
 app.use(express.static(path.join(__dirname, 'client/build')));
 
-/*app.get('*', (req, res) => {
+app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname+'/client/build/index.html'));
-});*/
+});
 
 app.post('/api/search', (req, res, next) => {
     db.search(req.body.search, function(err, data) {
