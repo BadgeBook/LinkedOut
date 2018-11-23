@@ -11,9 +11,9 @@ app.use(express.urlencoded());
 app.use(cors({credentials: true, origin: true}));
 app.use(express.static(path.join(__dirname, 'client/build')));
 
-app.get('*', (req, res) => {
+/*app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname+'/client/build/index.html'));
-});
+});*/
 
 app.post('/api/search', (req, res, next) => {
     db.search(req.body.search, function(err, data) {
@@ -83,19 +83,27 @@ app.post('/api/getUserBadges', (req, res, next) => {
             res.send(err);
         } else {
             user = JSON.parse(user)
+            axiosUsers = []
+
             for(i=0; i<user.length; i++) {
-                axios.post(String(user[i].APIurl), {
+                axiosUsers[i] = axios.post(String(user[i].APIurl), {
                     userid: String(user[i].username),
                     apptoken: String(user[i].outgoingToken)
                   })
-                .then(response => {
-                    console.log(response.data);
-                })
-                .catch(error => {
-                    console.log(error);
-                });
             }
-            res.send(user)
+
+            axios.all(axiosUsers)
+                .then(axios.spread((...results) => {
+                    elements = []
+                    results.map((element) => {
+                        elements.push(element.data)
+                    });
+                    console.log(elements)
+                    res.send(elements)
+                }))
+                .catch((err) => {
+                    console.log(err);
+            });
         }
     });
 })

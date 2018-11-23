@@ -150,7 +150,7 @@ function getUserApplications(user, callback) {
         "    u.username, a.APIurl, a.outgoingToken" +
         "     FROM user u " +
         "     JOIN application_user au ON u.id = au.user_id" +
-        "     JOIN application a ON au.application_id" +
+        "     JOIN application a ON au.application_id = a.id" +
         "     WHERE u.id = ?",
         [user.userId],
         function (err, result) {

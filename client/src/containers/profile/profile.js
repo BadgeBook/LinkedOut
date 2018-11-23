@@ -17,6 +17,7 @@ class Profile extends Component {
         let userId = sessionStorage.getItem("_id");
         if (userId) {
             this.getUserFromDb(userId);
+            this.getUserBadgesFromDb(userId);
         }
     }
 
@@ -27,18 +28,22 @@ class Profile extends Component {
             .then(response => this.setState({
                 isLoggedIn: true,
                 user: response.data
-            }));
+            }));         
+    };
+
+    getUserBadgesFromDb = (userId) => {
         axios.post('/api/getUserBadges', {
-                userId: userId
-        })
-            .then(response => this.setState({
-                badges: response.data
-            }));
-            
+            userId: userId
+    })
+        .then(response => this.setState({
+            badges: response.data
+        }));
+
     };
 
     render() {
         if (this.state.isLoggedIn) {
+            this.state.user[0].badges = this.state.badges
             return (
                 <div className="Profile">
                     <div className="d-flex justify-content-center">

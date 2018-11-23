@@ -3,7 +3,7 @@ import './homepage.css';
 import axios from 'axios';
 import SearchBar from '../../containers/searchBar/searchBar';
 import Authenticate from '../authenticate/authenticate';
-import AppList from '../../components/appList/appList';
+import AppCardsList from '../../components/appCardsList/appCardsList';
 
 
 class Homepage extends Component {
@@ -37,8 +37,8 @@ class Homepage extends Component {
                 </div>
                 <h2>Landing Page</h2>
                 <button className="btn btn-success" onClick={() => window.location.href = '/profile'}>Go to profile</button>
-                <div className="AppList">
-                    <AppList applications={this.state.applications}/>
+                <div className="AppCardsList">
+                    <AppCardsList applications={this.state.applications}/>
                 </div>
             </div>
         );
