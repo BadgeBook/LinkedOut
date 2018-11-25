@@ -63,8 +63,12 @@ function login(user, callback) {
         function (err, result) {
             if (err) {
                 callback(err, null);
+            } else
+            if (!result[0]) {
+                callback({errorMessage: "Your username or password is incorrect"}, null);
+            } else {
+                callback(null, {id: result[0].id});
             }
-            callback(null, {id: result[0].id});
         });
 
     db_connection.end();
