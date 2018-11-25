@@ -18,8 +18,8 @@ function search(query, callback) {
         "      FROM user " +
         "     WHERE username REGEXP ?" +
         "        OR fullname REGEXP ?" +
-        "        OR description REGEXP ?",
-        [words, words, words],
+        "        OR description LIKE ?",
+        [words, words, '%' + words + '%'],
         function (err, result) {
             if (err) {
                 callback(err, null);
