@@ -34,17 +34,22 @@ function signUp(user, callback) {
     let db_connection = mysql.createConnection(db_config);
 
     db_connection.query(
-        "INSERT INTO user (username, password) VALUES(?, ?)",
-        [user.username, user.password],
+        "SELECT id FROM user WHERE username = ?",
+        [user.username],
         function (err, result) {
             if (err) {
-                if (err.code === "ER_DUP_ENTRY") {
-                    callback({errorMessage: "This user already exists"}, null);
-                } else {
-                    callback(err, null);
-                }
+                db_connection.query(
+                    "INSERT INTO user (username, password) VALUES(?, ?)",
+                    [user.username, user.password],
+                    function (err, result) {
+                        if (err) {
+                            callback({errorMessage: err}, null);
+                        } else {
+                            callback(null, {id: result.insertId});
+                        }
+                    });
             } else {
-                callback(null, {id: result.insertId});
+                callback({errorMessage: "This user already exists"}, null);
             }
         });
 
@@ -62,7 +67,7 @@ function login(user, callback) {
         [user.username, user.password],
         function (err, result) {
             if (err) {
-                callback(err, null);
+                callback({errorMessage: err}, null);
             } else
             if (!result[0]) {
                 callback({errorMessage: "Your username or password is incorrect"}, null);
