@@ -43,7 +43,7 @@ class Profile extends Component {
 
     render() {
         if (this.state.isLoggedIn) {
-            this.state.user[0].badges = this.state.badges
+            this.state.user[0].badges = this.state.badges;
             return (
                 <div className="Profile">
                     <div className="d-flex justify-content-center">

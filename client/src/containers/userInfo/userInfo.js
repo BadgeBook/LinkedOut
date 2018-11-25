@@ -102,7 +102,7 @@ class UserInfo extends Component {
         if(this.state.user.badges) {
             let i;
             for (i=0; i<this.state.user.badges.length; i++) {
-                if (i!=1) {
+                if (i!==1) {
                     this.state.user.badges[i] = JSON.stringify(this.state.user.badges[i])
                 }
             }
