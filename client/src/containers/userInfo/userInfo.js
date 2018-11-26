@@ -12,7 +12,6 @@ class UserInfo extends Component {
         this.state = {
             editMode: false,
             text: props.user.description,
-            badges: props.user.badges,
             user: props.user
         };
     }
@@ -21,7 +20,6 @@ class UserInfo extends Component {
         this.setState({
             editMode: true,
             text: value,
-            badges: this.state.badges,
             user: this.state.user
         });
     };
@@ -30,7 +28,6 @@ class UserInfo extends Component {
         this.setState({
             editMode: false,
             text: this.state.text,
-            badges: this.state.badges,
             user: this.state.user
         });
         this.updateUserToDb();
@@ -40,7 +37,6 @@ class UserInfo extends Component {
         this.setState({
             editMode: true,
             text: this.state.text,
-            badges: this.state.badges,
             user: this.state.user
         });
     };
@@ -113,13 +109,11 @@ class UserInfo extends Component {
                                     <img alt="..." className="img-thumbnail" src={this.state.user.icon}/>
                                 </div>
                                 <div className="col-md-6 profile-info">
-                                    <row>
-                                        <h2 className="card-title">{this.state.user.fullname}</h2>
-                                        <div>
-                                            {descriptionText}
-                                            {descriptionButton}
-                                        </div>
-                                    </row>
+                                    <h2 className="card-title">{this.state.user.fullname}</h2>
+                                    <div>
+                                        {descriptionText}
+                                        {descriptionButton}
+                                    </div>
                                 </div>
                                 <div className="col-md-2 profile-info">
                                     <BadgeList badges={this.state.user.badges}/>
@@ -140,13 +134,11 @@ class UserInfo extends Component {
                                     <img alt="..." className="img-thumbnail" src={this.state.user.icon}/>
                                 </div>
                                 <div className="col-md-6 profile-info">
-                                    <row>
-                                        <h2 className="card-title">{this.state.user.fullname}</h2>
-                                        <div>
-                                            {descriptionText}
-                                            {descriptionButton}
-                                        </div>
-                                    </row>
+                                    <h2 className="card-title">{this.state.user.fullname}</h2>
+                                    <div>
+                                        {descriptionText}
+                                        {descriptionButton}
+                                    </div>
                                 </div>
                                 <div className="col-md-2 profile-info">
                                 </div>
