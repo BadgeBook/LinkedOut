@@ -27,20 +27,16 @@ class UserInfo extends Component {
         this.setState({
             editMode: true,
             text: value,
-            user: this.state.user,
-            badges: []
+            user: this.state.user
         });
-        this.componentDidMount();
     };
 
     onSaveChangesClick = () => {
         this.setState({
             editMode: false,
             text: this.state.text,
-            user: this.state.user,
-            badges: []
+            user: this.state.user
         });
-        this.componentDidMount();
         this.updateUserToDb();
     };
 
@@ -48,10 +44,8 @@ class UserInfo extends Component {
         this.setState({
             editMode: true,
             text: this.state.text,
-            user: this.state.user,
-            badges: []
+            user: this.state.user
         });
-        this.componentDidMount();
     };
 
     updateUserToDb = () => {
@@ -68,10 +62,12 @@ class UserInfo extends Component {
         axios.post('/api/getUserBadges', {
             userId: userId
     })
-        .then(response => this.setState({
-            badges: response.data
-        }));
-
+        .then(response => {
+            sessionStorage.setItem("_badges", JSON.stringify(response.data))
+            this.setState({
+                badges: response.data  
+            })
+        });
     };
 
     // User json that will be sent to the database for update
