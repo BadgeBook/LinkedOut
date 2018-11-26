@@ -16,20 +16,31 @@ class UserInfo extends Component {
         };
     }
 
+    componentDidMount() {
+        let userId = sessionStorage.getItem("_id");
+        if (userId) {
+            this.getUserBadgesFromDb(userId);
+        }
+    }
+
     handleTextChange = (value) => {
         this.setState({
             editMode: true,
             text: value,
-            user: this.state.user
+            user: this.state.user,
+            badges: []
         });
+        this.componentDidMount();
     };
 
     onSaveChangesClick = () => {
         this.setState({
             editMode: false,
             text: this.state.text,
-            user: this.state.user
+            user: this.state.user,
+            badges: []
         });
+        this.componentDidMount();
         this.updateUserToDb();
     };
 
@@ -37,8 +48,10 @@ class UserInfo extends Component {
         this.setState({
             editMode: true,
             text: this.state.text,
-            user: this.state.user
+            user: this.state.user,
+            badges: []
         });
+        this.componentDidMount();
     };
 
     updateUserToDb = () => {
@@ -49,6 +62,16 @@ class UserInfo extends Component {
             .then(response => {
                 console.log(response);
             });
+    };
+
+    getUserBadgesFromDb = (userId) => {
+        axios.post('/api/getUserBadges', {
+            userId: userId
+    })
+        .then(response => this.setState({
+            badges: response.data
+        }));
+
     };
 
     // User json that will be sent to the database for update
@@ -94,11 +117,11 @@ class UserInfo extends Component {
                 Update Description
             </button>;
         }
-        if(this.state.user.badges) {
+        if(this.state.badges) {
             let i;
-            for (i=0; i<this.state.user.badges.length; i++) {
-                this.state.user.badges[i] = this.state.user.badges[i].appname + " " 
-                    + this.state.user.badges[i].badgetype + ": " + this.state.user.badges[i].value
+            for (i=0; i<this.state.badges.length; i++) {
+                this.state.badges[i] = this.state.badges[i].appname + " " 
+                    + this.state.badges[i].badgetype + ": " + this.state.badges[i].value
             }
             return (
                 <div className="UserInfo">
@@ -116,7 +139,7 @@ class UserInfo extends Component {
                                     </div>
                                 </div>
                                 <div className="col-md-2 profile-info">
-                                    <BadgeList badges={this.state.user.badges}/>
+                                    <BadgeList badges={this.state.badges}/>
                                 </div>
                             </div>
                         </div>

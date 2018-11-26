@@ -17,7 +17,7 @@ class Profile extends Component {
         let userId = sessionStorage.getItem("_id");
         if (userId) {
             this.getUserFromDb(userId);
-            this.getUserBadgesFromDb(userId);
+            //this.getUserBadgesFromDb(userId);
         }
     }
 
@@ -31,7 +31,7 @@ class Profile extends Component {
             }));         
     };
 
-    getUserBadgesFromDb = (userId) => {
+    /*getUserBadgesFromDb = (userId) => {
         axios.post('/api/getUserBadges', {
             userId: userId
     })
@@ -39,7 +39,7 @@ class Profile extends Component {
             badges: response.data
         }));
 
-    };
+    };*/
 
     render() {
         if (this.state.isLoggedIn) {
