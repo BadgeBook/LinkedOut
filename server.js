@@ -106,17 +106,17 @@ app.post('/api/getUserBadges', (req, res, next) => {
 });
 
 app.post('/api/getConversations', (req, res, next) => {
-    db.getConversations(req.body, function(err, conversations) {
+    db.getConversations(req.body, function(err, users) {
         if (err) {
             res.send(err);
         } else {
-            res.send(conversations)
+            res.send(users)
         }
     });
 });
 
 app.post('/api/getMessages', (req, res, next) => {
-    db.getMessages(req.body, function(err, messages) {
+    db.getMessages(req.body.sender, req.body.receiver, function(err, messages) {
         if (err) {
             res.send(err);
         } else {

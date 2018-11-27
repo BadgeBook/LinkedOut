@@ -163,7 +163,7 @@ function getUserApplications(user, callback) {
     db_connection.end();
 }
 
-function getConversations(users, callback) {
+function getConversations(userId, callback) {
     let db_connection = mysql.createConnection(db_config);
 
     db_connection.query(
@@ -178,29 +178,29 @@ function getConversations(users, callback) {
         "                  WHERE (? = mu.user_id_sender OR ? = mu.user_id_receiver)) b" +
         "        ON u.id = b.user_id_receiver" +
         "     WHERE u.id != ?",
-        [user.userId, user.userId, user.userId, user.userId, user.userId],
-        function (err, result) {
+        [userId, userId, userId, userId, userId],
+        function (err, users) {
             if (err) {
                 callback(err, null);
             }
-            callback(null, JSON.stringify(result));
+            callback(null, JSON.stringify(users));
         });
 
     db_connection.end();
 }
 
-function getMessages(users, callback) {
+function getMessages(sender_user_id, receiver_user_id, callback) {
     let db_connection = mysql.createConnection(db_config);
 
     db_connection.query(
-        "SELECT u.fullname, m.message, m.timestamp" +
+        "SELECT u.fullname, m.content, m.timestamp" +
         "      FROM message m" +
-        "      JOIN message_user mu on c.id = mu.message_id" +
+        "      JOIN message_user mu on m.id = mu.message_id" +
         "      JOIN user u on mu.user_id_sender = u.id" +
         "     WHERE (? = mu.user_id_sender AND ? = mu.user_id_receiver)" +
         "        OR (? = mu.user_id_receiver AND ? = mu.user_id_sender)" +
         "     ORDER BY m.timestamp ASC",
-        [users.sender.userId, users.receiver.userId, users.sender.userId, users.receiver.userId],
+        [sender_user_id, receiver_user_id, sender_user_id, receiver_user_id],
         function (err, result) {
             if (err) {
                 callback(err, null);
