@@ -16,6 +16,13 @@ class UserInfo extends Component {
         };
     }
 
+    componentDidMount() {
+        let userId = sessionStorage.getItem("_id");
+        if (userId) {
+            this.getUserBadgesFromDb(userId);
+        }
+    }
+
     handleTextChange = (value) => {
         this.setState({
             editMode: true,
@@ -51,12 +58,23 @@ class UserInfo extends Component {
             });
     };
 
+    getUserBadgesFromDb = (userId) => {
+        axios.post('/api/getUserBadges', {
+            userId: userId
+    })
+        .then(response => {
+            sessionStorage.setItem("_badges", JSON.stringify(response.data))
+            this.setState({
+                badges: response.data  
+            })
+        });
+    };
+
     // User json that will be sent to the database for update
     prepareUpdatedUser = () => {
         let fullname = "";
         let icon = "";
         let description = "";
-        let badges = "";
 
         if (this.state.user.fullname !== this.props.user.fullname) {
             fullname = this.state.user.fullname;
@@ -67,16 +85,12 @@ class UserInfo extends Component {
         if (this.state.text !== this.props.user.description) {
             description = this.state.text;
         }
-        if (this.state.user.badges !== this.props.user.badges) {
-            badges = this.state.user.badges;
-        }
 
         return {
             userId: sessionStorage.getItem("_id"),
             fullname: fullname,
             icon: icon,
-            description: description,
-            badges: badges
+            description: description
         };
     };
 
@@ -99,12 +113,11 @@ class UserInfo extends Component {
                 Update Description
             </button>;
         }
-        if(this.state.user.badges) {
+        if(this.state.badges) {
             let i;
-            for (i=0; i<this.state.user.badges.length; i++) {
-                if (i!=1) {
-                    this.state.user.badges[i] = JSON.stringify(this.state.user.badges[i])
-                }
+            for (i=0; i<this.state.badges.length; i++) {
+                this.state.badges[i] = this.state.badges[i].appname + " " 
+                    + this.state.badges[i].badgetype + ": " + this.state.badges[i].value
             }
             return (
                 <div className="UserInfo">
@@ -115,16 +128,14 @@ class UserInfo extends Component {
                                     <img alt="..." className="img-thumbnail" src={this.state.user.icon}/>
                                 </div>
                                 <div className="col-md-6 profile-info">
-                                    <row>
-                                        <h2 className="card-title">{this.state.user.fullname}</h2>
-                                        <div>
-                                            {descriptionText}
-                                            {descriptionButton}
-                                        </div>
-                                    </row>
+                                    <h2 className="card-title">{this.state.user.fullname}</h2>
+                                    <div>
+                                        {descriptionText}
+                                        {descriptionButton}
+                                    </div>
                                 </div>
                                 <div className="col-md-2 profile-info">
-                                    <BadgeList badges={this.state.user.badges}/>
+                                    <BadgeList badges={this.state.badges}/>
                                 </div>
                             </div>
                         </div>
@@ -132,13 +143,29 @@ class UserInfo extends Component {
                 </div>
             );
         }
-        else {
-            console.log("got here")
+        else if (this.state.user) {
             return (
                 <div className="UserInfo">
-                    <div className="waiting"><h1>Wait...</h1></div>
+                    <div className="card jumbotron">
+                        <div className="card-body">
+                            <div className="row">
+                                <div className="col-md-3">
+                                    <img alt="..." className="img-thumbnail" src={this.state.user.icon}/>
+                                </div>
+                                <div className="col-md-6 profile-info">
+                                    <h2 className="card-title">{this.state.user.fullname}</h2>
+                                    <div>
+                                        {descriptionText}
+                                        {descriptionButton}
+                                    </div>
+                                </div>
+                                <div className="col-md-2 profile-info">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            )
+            );
         }
     }
 }

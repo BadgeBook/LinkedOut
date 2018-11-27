@@ -95,7 +95,6 @@ app.post('/api/getUserBadges', (req, res, next) => {
                     results.map((element) => {
                         elements.push(element.data)
                     });
-                    console.log(elements)
                     res.send(elements)
                 }))
                 .catch((err) => {
