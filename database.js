@@ -163,6 +163,46 @@ function getUserApplications(user, callback) {
     db_connection.end();
 }
 
+function getConversations(users, callback) {
+    let db_connection = mysql.createConnection(db_config);
+    //TODO: fix query to only return unique combinations of user conversations
+    db_connection.query(
+        "SELECT DISTINCT user_id_sender, user_id_receiver" +
+        "      FROM conversation_user" +
+        "     WHERE ? IN (user_id_sender, user_id_receiver)",
+        [user.userId],
+        function (err, result) {
+            if (err) {
+                callback(err, null);
+            }
+            callback(null, JSON.stringify(result));
+        });
+
+    db_connection.end();
+}
+
+function getMessages(users, callback) {
+    let db_connection = mysql.createConnection(db_config);
+
+    db_connection.query(
+        "SELECT u.fullname, c.message, c.timestamp" +
+        "      FROM conversation c" +
+        "      JOIN conversation_user cu on c.id = cu.conversation_id" +
+        "      JOIN user u on cu.user_id_sender = u.id" +
+        "     WHERE (? = cu.user_id_sender AND ? = cu.user_id_receiver)" +
+        "        OR (? = cu.user_id_receiver AND ? = cu.user_id_sender)" +
+        "     ORDER BY c.timestamp ASC",
+        [users.sender.userId, users.receiver.userId, users.sender.userId, users.receiver.userId],
+        function (err, result) {
+            if (err) {
+                callback(err, null);
+            }
+            callback(null, JSON.stringify(result));
+        });
+
+    db_connection.end();
+}
+
 module.exports = {
-    search, signUp, login, getUser, updateUser, getApplications, getUserApplications
+    search, signUp, login, getUser, updateUser, getApplications, getUserApplications, getConversations, getMessages
 };
