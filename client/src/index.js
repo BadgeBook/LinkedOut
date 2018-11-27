@@ -4,7 +4,7 @@ import Homepage from './containers/homepage/homepage'
 import Profile from './containers/profile/profile'
 import SearchPage from './containers/searchPage/searchPage'
 import Login from './containers/login/login'
-import App from './App';
+//import App from './App';
 
 import {
     Route,
