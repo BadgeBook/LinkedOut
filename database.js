@@ -1,6 +1,8 @@
 // ClearDB Database Setup
 const mysql = require('mysql');
+const crypto = require('crypto');
 
+const secret = "webdev";
 const db_config = {
     host: "us-cdbr-iron-east-01.cleardb.net",
     user: "b55be0f1d3c7ce",
@@ -37,7 +39,14 @@ function signUp(user, callback) {
         "SELECT id FROM user WHERE username = ?",
         [user.username],
         function (err, result) {
+            console.log(err);
+            console.log(result);
+            //TODO: fix so that it only creates a user when a user is found
             if (err) {
+                console.log("test");
+                user.password = crypto.createHmac('sha256', secret)
+                    .update(user.password).digest("hex");
+
                 db_connection.query(
                     "INSERT INTO user (username, password) VALUES(?, ?)",
                     [user.username, user.password],
@@ -58,6 +67,9 @@ function signUp(user, callback) {
 
 function login(user, callback) {
     let db_connection = mysql.createConnection(db_config);
+
+    user.password = crypto.createHmac('sha256', secret)
+        .update(user.password).digest("hex");
 
     db_connection.query(
         "SELECT id " +
