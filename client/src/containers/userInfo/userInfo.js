@@ -63,7 +63,7 @@ class UserInfo extends Component {
             userId: userId
     })
         .then(response => {
-            sessionStorage.setItem("_badges", JSON.stringify(response.data))
+            sessionStorage.setItem("_badges", JSON.stringify(response.data));
             this.setState({
                 badges: response.data  
             })
