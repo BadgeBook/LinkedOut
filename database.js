@@ -165,12 +165,20 @@ function getUserApplications(user, callback) {
 
 function getConversations(users, callback) {
     let db_connection = mysql.createConnection(db_config);
-    //TODO: fix query to only return unique combinations of user conversations
+
     db_connection.query(
-        "SELECT DISTINCT user_id_sender, user_id_receiver" +
-        "      FROM conversation_user" +
-        "     WHERE ? IN (user_id_sender, user_id_receiver)",
-        [user.userId],
+        "SELECT u.id, u.fullname" +
+        "      FROM user u" +
+        "     INNER JOIN (SELECT DISTINCT mu.user_id_sender" +
+        "                   FROM message_user mu" +
+        "                  WHERE (? = mu.user_id_sender OR ? = mu.user_id_receiver)) a" +
+        "        ON u.id = a.user_id_sender" +
+        "     INNER JOIN (SELECT DISTINCT mu.user_id_receiver" +
+        "                   FROM message_user mu" +
+        "                  WHERE (? = mu.user_id_sender OR ? = mu.user_id_receiver)) b" +
+        "        ON u.id = b.user_id_receiver" +
+        "     WHERE u.id != ?",
+        [user.userId, user.userId, user.userId, user.userId, user.userId],
         function (err, result) {
             if (err) {
                 callback(err, null);
@@ -185,13 +193,13 @@ function getMessages(users, callback) {
     let db_connection = mysql.createConnection(db_config);
 
     db_connection.query(
-        "SELECT u.fullname, c.message, c.timestamp" +
-        "      FROM conversation c" +
-        "      JOIN conversation_user cu on c.id = cu.conversation_id" +
-        "      JOIN user u on cu.user_id_sender = u.id" +
-        "     WHERE (? = cu.user_id_sender AND ? = cu.user_id_receiver)" +
-        "        OR (? = cu.user_id_receiver AND ? = cu.user_id_sender)" +
-        "     ORDER BY c.timestamp ASC",
+        "SELECT u.fullname, m.message, m.timestamp" +
+        "      FROM message m" +
+        "      JOIN message_user mu on c.id = mu.message_id" +
+        "      JOIN user u on mu.user_id_sender = u.id" +
+        "     WHERE (? = mu.user_id_sender AND ? = mu.user_id_receiver)" +
+        "        OR (? = mu.user_id_receiver AND ? = mu.user_id_sender)" +
+        "     ORDER BY m.timestamp ASC",
         [users.sender.userId, users.receiver.userId, users.sender.userId, users.receiver.userId],
         function (err, result) {
             if (err) {
