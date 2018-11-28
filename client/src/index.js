@@ -5,6 +5,7 @@ import Profile from './containers/profile/profile'
 import SearchPage from './containers/searchPage/searchPage'
 import Login from './containers/login/login'
 import ViewUser from './containers/viewUser/viewUser'
+import InternalMessaging from './containers/internalMessaging/internalMessaging'
 //import App from './App';
 
 import {
@@ -28,6 +29,7 @@ ReactDOM.render(
             <Route exact path="/search" component = {SearchPage} />
             <Route exact path="/login" component = {Login} />
             <Route exact path="/viewUser" component = {ViewUser} />
+            <Route exact path="/messageUser" component = {InternalMessaging} />
         </Switch>
     </Router>,
     document.getElementById('root')
