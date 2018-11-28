@@ -41,7 +41,7 @@ class SearchPage extends Component {
         // Display found users
         return (
             <div className="SearchPage">
-                <CardsList users={this.state.users}/>
+                <CardsList history={this.props.history} users={this.state.users}/>
             </div>
         );
     }
