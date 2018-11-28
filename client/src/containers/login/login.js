@@ -10,40 +10,53 @@ class Login extends Component {
         }
     }
 
+    componentDidMount() {
+        this.updateAuthenticationState();
+    }
+
+    updateAuthenticationState = () => {
+        let userId = sessionStorage.getItem('_id');
+        if (userId) {
+            this.setState({
+                props: this.state.props,
+                userId: userId
+            })
+        } else {
+            this.setState({
+                props: this.state.props,
+                userId: null
+            })
+        }
+    };
+
     onLoginClicked = (username, password) => {
         if (!username || !password) {
             this.setState({
                 error: "Missing username or password"
             })
         } else {
-            this.setState({
-                username: username,
-                password: password
-            });
             axios.post('/api/login', {
                 username: username,
                 password: password
             })
-                .then(response => this.createUserSession(response.data[0].id));
+                .then(response => {
+                    this.createUserSession(response)
+                });
         }
     };
 
-    // @TODO Change to response.id when response is fixed
-    createUserSession = (id) => {
-        if (!id) {
+    createUserSession = (response) => {
+        if (!response.data.id) {
             this.setState({
-                // @TODO Reinplement the error when response is fixed
-                // error: response.errorMessage
+                error: response.data.errorMessage
             });
             return;
         }
 
-        this.setState({
-            userId: id,
-        });
-
         sessionStorage.clear();
-        sessionStorage.setItem("_id", id);
+        sessionStorage.setItem("_id", response.data.id);
+
+        // REDIRECT BACK TO EXTERNAL APP
     };
 
     render() {
@@ -55,16 +68,8 @@ class Login extends Component {
             errMessage = <h5 className="errorMessage">{this.state.error}</h5>
         }
 
-        let successMessage;
-        if (this.state.userId) {
-            successMessage = <h5 className="successMessage">"Logged in!"</h5>;
-            errMessage = ""
-        }
-        
-        return (
-            <div className="Login">
-                {errMessage}
-                {successMessage}
+        let signInView =
+            <div>
                 <form action="" className="login-form">
                     <label>
                         <input
@@ -83,7 +88,7 @@ class Login extends Component {
                         </input>
                     </label>
                 </form>
-                <button 
+                <button
                     className="btn btn-warning"
                     type="button"
                     onClick={() => {
@@ -91,6 +96,19 @@ class Login extends Component {
                     }}>
                     Log In
                 </button>
+            </div>
+        ;
+
+        if (this.state.userId) {
+            returnedView = signInView; //REDIRECT BACK TO EXTERNAL APP AND PASS USERNAME AND APPTOKEN;
+        } else {
+            returnedView = signInView;
+        }
+        
+        return (
+            <div className="Login">
+                {errMessage}
+                {returnedView}
             </div>
         );
     }
