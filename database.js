@@ -1,6 +1,8 @@
 // ClearDB Database Setup
 const mysql = require('mysql');
+const crypto = require('crypto');
 
+const secret = "webdev";
 const db_config = {
     host: "us-cdbr-iron-east-01.cleardb.net",
     user: "b55be0f1d3c7ce",
@@ -33,23 +35,17 @@ function search(query, callback) {
 function signUp(user, callback) {
     let db_connection = mysql.createConnection(db_config);
 
+    user.password = crypto.createHmac('sha256', secret)
+            .update(user.password).digest("hex");
+
     db_connection.query(
-        "SELECT id FROM user WHERE username = ?",
-        [user.username],
-        function (err, result) {
+        "INSERT INTO user (username, password) VALUES(?, ?)",
+        [user.username, user.password],
+        function (err, res) {
             if (err) {
-                db_connection.query(
-                    "INSERT INTO user (username, password) VALUES(?, ?)",
-                    [user.username, user.password],
-                    function (err, result) {
-                        if (err) {
-                            callback({errorMessage: err}, null);
-                        } else {
-                            callback(null, {id: result.insertId});
-                        }
-                    });
+                callback({errorMessage: err.sqlMessage}, null);
             } else {
-                callback({errorMessage: "This user already exists"}, null);
+                callback(null, {id: res.insertId});
             }
         });
 
@@ -58,6 +54,9 @@ function signUp(user, callback) {
 
 function login(user, callback) {
     let db_connection = mysql.createConnection(db_config);
+
+    user.password = crypto.createHmac('sha256', secret)
+        .update(user.password).digest("hex");
 
     db_connection.query(
         "SELECT id " +
@@ -177,6 +176,72 @@ function getUserApplications(user, callback) {
     db_connection.end();
 }
 
+function getConversations(userId, callback) {
+    let db_connection = mysql.createConnection(db_config);
+
+    db_connection.query(
+        "SELECT u.id, u.username" +
+        "      FROM user u" +
+        "     INNER JOIN (" +
+    "                    (SELECT m.user_id_receiver" +
+    "                       FROM messages m" +
+    "                      WHERE m.user_id_sender = 1141)" +
+    "                 UNION" +
+    "                    (SELECT m.user_id_sender" +
+    "                       FROM messages m" +
+    "                      WHERE m.user_id_receiver = 1141)" +
+    "                ) m" +
+        "        ON u.id = m.user_id_receiver",
+        [userId, userId, userId, userId, userId],
+        function (err, users) {
+            if (err) {
+                callback(err, null);
+            }
+            callback(null, JSON.stringify(users));
+        });
+
+    db_connection.end();
+}
+
+function getMessages(users, callback) {
+    let db_connection = mysql.createConnection(db_config);
+
+    db_connection.query(
+        "SELECT *" +
+        "      FROM messages" +
+        "     WHERE (? = user_id_sender AND ? = user_id_receiver)" +
+        "        OR (? = user_id_receiver AND ? = user_id_sender)" +
+        "     ORDER BY timestamp ASC",
+        [users.user_id_sender, users.user_id_receiver, users.user_id_sender, users.user_id_receiver],
+        function (err, result) {
+            if (err) {
+                callback(err, null);
+            }
+            callback(null, JSON.stringify(result));
+        });
+
+    db_connection.end();
+}
+
+function sendMessage(message, callback) {
+    let db_connection = mysql.createConnection(db_config);
+
+    db_connection.query(
+        "INSERT INTO messages (user_id_sender, user_id_receiver, content, timestamp) VALUES(?, ?, ?, ?)",
+        [message.user_id_sender, message.user_id_receiver, message.content, message.timestamp],
+        function (err, result) {
+            if (err) {
+                callback(err, null);
+            }
+            callback(null, result.affectedRows);
+        });
+
+    db_connection.end();
+}
+
 module.exports = {
-    search, signUp, login, getUser, updateUser, getApplications, getUserApplications
+    search, signUp, login,
+    getUser, updateUser,
+    getApplications, getUserApplications,
+    getConversations, getMessages, sendMessage
 };
