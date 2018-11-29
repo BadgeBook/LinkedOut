@@ -1,6 +1,8 @@
 // ClearDB Database Setup
 const mysql = require('mysql');
+const crypto = require('crypto');
 
+const secret = "webdev";
 const db_config = {
     host: "us-cdbr-iron-east-01.cleardb.net",
     user: "b55be0f1d3c7ce",
@@ -33,23 +35,17 @@ function search(query, callback) {
 function signUp(user, callback) {
     let db_connection = mysql.createConnection(db_config);
 
+    user.password = crypto.createHmac('sha256', secret)
+            .update(user.password).digest("hex");
+
     db_connection.query(
-        "SELECT id FROM user WHERE username = ?",
-        [user.username],
-        function (err, result) {
+        "INSERT INTO user (username, password) VALUES(?, ?)",
+        [user.username, user.password],
+        function (err, res) {
             if (err) {
-                db_connection.query(
-                    "INSERT INTO user (username, password) VALUES(?, ?)",
-                    [user.username, user.password],
-                    function (err, result) {
-                        if (err) {
-                            callback({errorMessage: err}, null);
-                        } else {
-                            callback(null, {id: result.insertId});
-                        }
-                    });
+                callback({errorMessage: err.sqlMessage}, null);
             } else {
-                callback({errorMessage: "This user already exists"}, null);
+                callback(null, {id: res.insertId});
             }
         });
 
@@ -58,6 +54,9 @@ function signUp(user, callback) {
 
 function login(user, callback) {
     let db_connection = mysql.createConnection(db_config);
+
+    user.password = crypto.createHmac('sha256', secret)
+        .update(user.password).digest("hex");
 
     db_connection.query(
         "SELECT id " +
