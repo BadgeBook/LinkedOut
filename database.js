@@ -35,30 +35,17 @@ function search(query, callback) {
 function signUp(user, callback) {
     let db_connection = mysql.createConnection(db_config);
 
-    db_connection.query(
-        "SELECT id FROM user WHERE username = ?",
-        [user.username],
-        function (err, result) {
-            console.log(err);
-            console.log(result);
-            //TODO: fix so that it only creates a user when a user is found
-            if (err) {
-                console.log("test");
-                user.password = crypto.createHmac('sha256', secret)
-                    .update(user.password).digest("hex");
+    user.password = crypto.createHmac('sha256', secret)
+            .update(user.password).digest("hex");
 
-                db_connection.query(
-                    "INSERT INTO user (username, password) VALUES(?, ?)",
-                    [user.username, user.password],
-                    function (err, result) {
-                        if (err) {
-                            callback({errorMessage: err}, null);
-                        } else {
-                            callback(null, {id: result.insertId});
-                        }
-                    });
+    db_connection.query(
+        "INSERT INTO user (username, password) VALUES(?, ?)",
+        [user.username, user.password],
+        function (err, res) {
+            if (err) {
+                callback({errorMessage: err.sqlMessage}, null);
             } else {
-                callback({errorMessage: "This user already exists"}, null);
+                callback(null, {id: res.insertId});
             }
         });
 
