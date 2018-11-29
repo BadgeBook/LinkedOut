@@ -167,17 +167,18 @@ function getConversations(userId, callback) {
     let db_connection = mysql.createConnection(db_config);
 
     db_connection.query(
-        "SELECT u.id, u.fullname" +
+        "SELECT u.id, u.username" +
         "      FROM user u" +
-        "     INNER JOIN (SELECT DISTINCT mu.user_id_sender" +
-        "                   FROM message_user mu" +
-        "                  WHERE (? = mu.user_id_sender OR ? = mu.user_id_receiver)) a" +
-        "        ON u.id = a.user_id_sender" +
-        "     INNER JOIN (SELECT DISTINCT mu.user_id_receiver" +
-        "                   FROM message_user mu" +
-        "                  WHERE (? = mu.user_id_sender OR ? = mu.user_id_receiver)) b" +
-        "        ON u.id = b.user_id_receiver" +
-        "     WHERE u.id != ?",
+        "     INNER JOIN (" +
+    "                    (SELECT m.user_id_receiver" +
+    "                       FROM messages m" +
+    "                      WHERE m.user_id_sender = 1141)" +
+    "                 UNION" +
+    "                    (SELECT m.user_id_sender" +
+    "                       FROM messages m" +
+    "                      WHERE m.user_id_receiver = 1141)" +
+    "                ) m" +
+        "        ON u.id = m.user_id_receiver",
         [userId, userId, userId, userId, userId],
         function (err, users) {
             if (err) {
@@ -189,18 +190,16 @@ function getConversations(userId, callback) {
     db_connection.end();
 }
 
-function getMessages(sender_user_id, receiver_user_id, callback) {
+function getMessages(users, callback) {
     let db_connection = mysql.createConnection(db_config);
 
     db_connection.query(
-        "SELECT u.fullname, m.content, m.timestamp" +
-        "      FROM message m" +
-        "      JOIN message_user mu on m.id = mu.message_id" +
-        "      JOIN user u on mu.user_id_sender = u.id" +
-        "     WHERE (? = mu.user_id_sender AND ? = mu.user_id_receiver)" +
-        "        OR (? = mu.user_id_receiver AND ? = mu.user_id_sender)" +
-        "     ORDER BY m.timestamp ASC",
-        [sender_user_id, receiver_user_id, sender_user_id, receiver_user_id],
+        "SELECT *" +
+        "      FROM messages" +
+        "     WHERE (? = user_id_sender AND ? = user_id_receiver)" +
+        "        OR (? = user_id_receiver AND ? = user_id_sender)" +
+        "     ORDER BY timestamp ASC",
+        [users.user_id_sender, users.user_id_receiver, users.user_id_sender, users.user_id_receiver],
         function (err, result) {
             if (err) {
                 callback(err, null);
@@ -211,6 +210,25 @@ function getMessages(sender_user_id, receiver_user_id, callback) {
     db_connection.end();
 }
 
+function sendMessage(message, callback) {
+    let db_connection = mysql.createConnection(db_config);
+
+    db_connection.query(
+        "INSERT INTO messages (user_id_sender, user_id_receiver, content, timestamp) VALUES(?, ?, ?, ?)",
+        [message.user_id_sender, message.user_id_receiver, message.content, message.timestamp],
+        function (err, result) {
+            if (err) {
+                callback(err, null);
+            }
+            callback(null, result.affectedRows);
+        });
+
+    db_connection.end();
+}
+
 module.exports = {
-    search, signUp, login, getUser, updateUser, getApplications, getUserApplications, getConversations, getMessages
+    search, signUp, login,
+    getUser, updateUser,
+    getApplications, getUserApplications,
+    getConversations, getMessages, sendMessage
 };
