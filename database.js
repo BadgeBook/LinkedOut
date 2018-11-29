@@ -1,6 +1,8 @@
 // ClearDB Database Setup
 const mysql = require('mysql');
+const crypto = require('crypto');
 
+const secret = "webdev";
 const db_config = {
     host: "us-cdbr-iron-east-01.cleardb.net",
     user: "b55be0f1d3c7ce",
@@ -33,14 +35,18 @@ function search(query, callback) {
 function signUp(user, callback) {
     let db_connection = mysql.createConnection(db_config);
 
+    user.password = crypto.createHmac('sha256', secret)
+            .update(user.password).digest("hex");
+
     db_connection.query(
         "INSERT INTO user (username, password) VALUES(?, ?)",
         [user.username, user.password],
-        function (err, result) {
+        function (err, res) {
             if (err) {
-                callback(err, null);
+                callback({errorMessage: err.sqlMessage}, null);
+            } else {
+                callback(null, {id: res.insertId});
             }
-            callback(null, {id: result.insertId});
         });
 
     db_connection.end();
@@ -48,6 +54,9 @@ function signUp(user, callback) {
 
 function login(user, callback) {
     let db_connection = mysql.createConnection(db_config);
+
+    user.password = crypto.createHmac('sha256', secret)
+        .update(user.password).digest("hex");
 
     db_connection.query(
         "SELECT id " +
@@ -57,9 +66,13 @@ function login(user, callback) {
         [user.username, user.password],
         function (err, result) {
             if (err) {
-                callback(err, null);
+                callback({errorMessage: err}, null);
+            } else
+            if (!result[0]) {
+                callback({errorMessage: "Your username or password is incorrect"}, null);
+            } else {
+                callback(null, {id: result[0].id});
             }
-            callback(null, {id: result[0].id});
         });
 
     db_connection.end();

@@ -10,16 +10,31 @@ class Authenticate extends Component {
         }
     }
 
+    componentDidMount() {
+        this.updateAuthenticationState();
+    }
+
+    updateAuthenticationState = () => {
+        let userId = sessionStorage.getItem('_id');
+        if (userId) {
+            this.setState({
+                props: this.state.props,
+                userId: userId
+            })
+        } else {
+            this.setState({
+                props: this.state.props,
+                userId: null
+            })
+        }
+    };
+
     onSignUpClicked = (username, password) => {
         if (!username || !password) {
             this.setState({
                 error: "Missing username or password"
             })
         } else {
-            this.setState({
-                username: username,
-                password: password
-            });
             axios.post('/api/signUp', {
                 username: username,
                 password: password
@@ -36,10 +51,6 @@ class Authenticate extends Component {
                 error: "Missing username or password"
             })
         } else {
-            this.setState({
-                username: username,
-                password: password
-            });
             axios.post('/api/login', {
                 username: username,
                 password: password
@@ -48,6 +59,11 @@ class Authenticate extends Component {
                     this.createUserSession(response)
                 });
         }
+    };
+
+    onSignOutClicked = () => {
+        sessionStorage.clear();
+        this.updateAuthenticationState();
     };
 
     createUserSession = (response) => {
@@ -80,11 +96,9 @@ class Authenticate extends Component {
             successMessage = <h5 className="successMessage">"Logged in!"</h5>;
             errMessage = ""
         }
-        
-        return (
-            <div className="Authenticate">
-                {errMessage}
-                {successMessage}
+
+        let signInView =
+            <div>
                 <form action="" className="login-form">
                     <label>
                         <input
@@ -103,7 +117,7 @@ class Authenticate extends Component {
                         </input>
                     </label>
                 </form>
-                <button 
+                <button
                     className="btn btn-warning"
                     type="button"
                     onClick={() => {
@@ -111,7 +125,7 @@ class Authenticate extends Component {
                     }}>
                     Log In
                 </button>
-                <button 
+                <button
                     className="btn btn-info"
                     type="button"
                     onClick={() => {
@@ -119,6 +133,33 @@ class Authenticate extends Component {
                     }}>
                     Sign Up
                 </button>
+            </div>
+        ;
+
+        let signOutView =
+            <button
+                className="btn btn-danger"
+                type="button"
+                onClick={() => {
+                    this.onSignOutClicked()
+                }}>
+                Sign Out
+            </button>
+        ;
+
+        let returnedView = null;
+
+        if (this.state.userId) {
+            returnedView = signOutView;
+        } else {
+            returnedView = signInView;
+        }
+        
+        return (
+            <div className="Authenticate">
+                {errMessage}
+                {successMessage}
+                {returnedView}
             </div>
         );
     }
