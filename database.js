@@ -91,8 +91,6 @@ function getUser(user, callback) {
             if (err) {
                 callback(err, null);
             }
-            //TODO fix hardcoded badges array
-            // result["badges"] = ["badge1", "badge2", "badge3"];
             callback(null, JSON.stringify(result));
         });
 
@@ -177,6 +175,26 @@ function getUserApplications(user, callback) {
     db_connection.end();
 }
 
+function getApplicationUser(userApp, callback) {
+    let db_connection = mysql.createConnection(db_config);
+
+    db_connection.query(
+        "SELECT au.id " +
+        "      FROM application a" +
+        "      JOIN application_user au ON a.id = a.application_id" +
+        "      WHERE au.user_id = ?" +
+        "        AND a.outgoingToken = ?",
+        [userApp.user, userApp.token],
+        function (err, result) {
+            if (err) {
+                callback(err, null);
+            }
+            callback(null, result);
+        });
+
+    db_connection.end();
+}
+
 module.exports = {
-    search, signUp, login, getUser, updateUser, getApplications, getUserApplications
+    search, signUp, login, getUser, updateUser, getApplications, getUserApplications, getApplicationUser
 };
