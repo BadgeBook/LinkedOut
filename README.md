@@ -5,8 +5,13 @@ Test Users:
 username  | password
 --------------------
 miranda	  | cats
+
 artur	    | cars
+
 alex	    | fish
+
 dylan	    | dylan
+
 devan	    | devan
+
 nebraska	| lincoln
