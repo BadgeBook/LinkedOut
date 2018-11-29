@@ -105,6 +105,36 @@ app.post('/api/getUserBadges', (req, res, next) => {
     });
 });
 
+app.post('/api/getConversations', (req, res, next) => {
+    db.getConversations(req.body, function(err, users) {
+        if (err) {
+            res.send(err);
+        } else {
+            res.send(users)
+        }
+    });
+});
+
+app.post('/api/getMessages', (req, res, next) => {
+    db.getMessages(req.body, function(err, messages) {
+        if (err) {
+            res.send(err);
+        } else {
+            res.send(messages)
+        }
+    });
+});
+
+app.post('/api/sendMessage', (req, res, next) => {
+    db.sendMessage(req.body, function(err, success) {
+        if (err) {
+            res.send(err);
+        } else {
+            res.send(success)
+        }
+    });
+});
+
 app.listen(process.env.PORT || 4000, () => {
     console.log('Listening on port 4000');
 });
