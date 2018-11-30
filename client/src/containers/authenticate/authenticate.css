@@ -9,3 +9,7 @@
 .Authenticate .successMessage {
     color: green;
 }
+
+.Authenticate .h-spacing {
+    margin-left: 1vh;
+}

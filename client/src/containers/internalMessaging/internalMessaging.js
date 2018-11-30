@@ -27,6 +27,7 @@ class ViewUser extends Component {
             });
     };
 
+    //@TODO refactor
     fetchMessages = () => {
         axios.post('/api/getMessages', {
             user_id_sender: this.state.fromUser.id,
