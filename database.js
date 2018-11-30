@@ -176,7 +176,7 @@ function getUserApplications(user, callback) {
     db_connection.end();
 }
 
-function getConversations(userId, callback) {
+function getConversations(user, callback) {
     let db_connection = mysql.createConnection(db_config);
 
     db_connection.query(
@@ -192,7 +192,7 @@ function getConversations(userId, callback) {
     "                      WHERE m.user_id_receiver = ?)" +
     "                ) m" +
         "        ON u.id = m.user_id_receiver",
-        [userId, userId, userId, userId, userId],
+        [user.userId, user.userId],
         function (err, users) {
             if (err) {
                 callback(err, null);
