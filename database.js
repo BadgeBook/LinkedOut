@@ -185,11 +185,11 @@ function getConversations(userId, callback) {
         "     INNER JOIN (" +
     "                    (SELECT m.user_id_receiver" +
     "                       FROM messages m" +
-    "                      WHERE m.user_id_sender = 1141)" +
+    "                      WHERE m.user_id_sender = ?)" +
     "                 UNION" +
     "                    (SELECT m.user_id_sender" +
     "                       FROM messages m" +
-    "                      WHERE m.user_id_receiver = 1141)" +
+    "                      WHERE m.user_id_receiver = ?)" +
     "                ) m" +
         "        ON u.id = m.user_id_receiver",
         [userId, userId, userId, userId, userId],
