@@ -82,7 +82,7 @@ function getUser(user, callback) {
     let db_connection = mysql.createConnection(db_config);
 
     db_connection.query(
-        "SELECT fullname, icon, description " +
+        "SELECT * " +
         "      FROM user " +
         "     WHERE id = ?",
         [user.userId],
@@ -180,7 +180,7 @@ function getConversations(userId, callback) {
     let db_connection = mysql.createConnection(db_config);
 
     db_connection.query(
-        "SELECT u.id, u.username" +
+        "SELECT *" +
         "      FROM user u" +
         "     INNER JOIN (" +
     "                    (SELECT m.user_id_receiver" +

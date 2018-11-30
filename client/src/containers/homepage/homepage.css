@@ -11,3 +11,11 @@
 .Homepage .login {
     margin-bottom: 2vh;
 }
+
+.Homepage .h-spacing {
+    margin-left: 1vh;
+}
+
+.Homepage .v-spacing {
+    margin-bottom: 5vh;
+}
