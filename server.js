@@ -169,6 +169,16 @@ app.post('/api/getApplicationInfo', (req, res, next) => {
     });
 });
 
+app.post('/api/getApplicationUser', (req, res, next) => {
+    db.getApplicationUser(req.body, function(err, userApp) {
+        if (err) {
+            res.send(err);
+        } else {
+            res.send(userApp)
+        }
+    });
+});
+
 app.listen(process.env.PORT || 4000, () => {
     console.log('Listening on port 4000');
 });

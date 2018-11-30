@@ -102,6 +102,9 @@ class Login extends Component {
     render() {
         let userName = React.createRef();
         let password = React.createRef();
+        let externalURL = window.location.href.split("#");
+        console.log(externalURL[1])
+        console.log(externalURL[2])
 
         let errMessage;
         if (this.state.error) {
@@ -186,7 +189,7 @@ class Login extends Component {
             return (
                 <div></div>
             )
-    }
+        }
 }
 
 export default Login;
