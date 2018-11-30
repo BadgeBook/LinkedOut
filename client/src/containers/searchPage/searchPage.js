@@ -30,9 +30,6 @@ class SearchPage extends Component {
     };
 
     render() {
-        console.log("print state\n");
-        console.log(this.state);
-
         // Redirect back to profile if search string is empty
         if (!this.props.location.state) {
             this.props.history.push('/profile');

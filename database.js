@@ -82,7 +82,7 @@ function getUser(user, callback) {
     let db_connection = mysql.createConnection(db_config);
 
     db_connection.query(
-        "SELECT fullname, icon, description " +
+        "SELECT * " +
         "      FROM user " +
         "     WHERE id = ?",
         [user.userId],
