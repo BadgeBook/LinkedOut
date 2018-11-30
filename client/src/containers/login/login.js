@@ -16,17 +16,34 @@ class Login extends Component {
 
     updateAuthenticationState = () => {
         let userId = sessionStorage.getItem('_id');
-        if (userId) {
-            this.setState({
-                props: this.state.props,
-                userId: userId
-            })
-        } else {
-            this.setState({
-                props: this.state.props,
-                userId: null
-            })
-        }
+        let externalURL = window.location.href.split("#");
+        let appInfo = []
+
+        axios.post('/api/getApplicationInfo', {
+            token: externalURL[2]
+        })
+            .then(response => {
+                appInfo = response.data[0];
+                if (userId) {
+                    this.setState({
+                        props: this.state.props,
+                        userId: userId,
+                        appURL: externalURL[1],
+                        appName: appInfo.name,
+                        appId: appInfo.id,
+                        appToken: appInfo.outgoingToken
+                    })
+                } else {
+                    this.setState({
+                        props: this.state.props,
+                        userId: null,
+                        appURL: externalURL[1],
+                        appName: appInfo.name,
+                        appId: appInfo.id,
+                        appToken: appInfo.outgoingToken
+                    })
+                }
+            });
     };
 
     onLoginClicked = (username, password) => {
@@ -55,9 +72,32 @@ class Login extends Component {
 
         sessionStorage.clear();
         sessionStorage.setItem("_id", response.data.id);
-
-        // REDIRECT BACK TO EXTERNAL APP
     };
+
+    checkAppPermission = (user, application) => {
+        axios.post('/api/getApplicationUser', {
+            user: user,
+            application: application
+        })
+            .then(response => {
+                return response;
+            });
+    }
+
+    onPermissionClicked = (user, application) => {
+        console.log(user)
+        console.log(application)
+        axios.post('/api/givePermission', {
+            user: user,
+            application: application
+        })
+            .then(response => {
+                axios.post(this.state.appURL, {
+                    userid: this.state.userId,
+                    apptoken: this.state.appToken
+                })
+            });
+    }
 
     render() {
         let userName = React.createRef();
@@ -99,18 +139,53 @@ class Login extends Component {
             </div>
         ;
 
+        let returnedView = null;
+
         if (this.state.userId) {
-            returnedView = signInView; //REDIRECT BACK TO EXTERNAL APP AND PASS USERNAME AND APPTOKEN;
+            axios.post('/api/getApplicationUser', {
+                user: this.state.userId,
+                application: this.state.appId
+            })
+                .then(response => {
+                    if (response.data.length > 0) {
+                        axios.post(this.state.appURL, {
+                            userid: this.state.userId,
+                            apptoken: this.state.appToken
+                        })
+                    } else {
+                        let loginDiv = document.createElement("DIV")
+                        loginDiv.setAttribute("class", "Login")
+
+                        let msg = document.createElement("P")
+                        msg.setAttribute("class", "app-permission")
+                        msg.innerHTML = "Allow " + this.state.appName + " permission to access your LinkedOut profile?"
+                        
+                        let button = document.createElement("BUTTON")
+                        button.setAttribute("class", "btn btn-warning")
+                        button.setAttribute("type", "button")
+                        button.onclick = () => {this.onPermissionClicked(this.state.userId, this.state.appId)}
+                        button.innerHTML = "Yes"
+                        
+                        loginDiv.append(msg)
+                        loginDiv.append(button)
+                        document.getElementById("root").append(loginDiv)
+                    }
+                });
         } else {
             returnedView = signInView;
         }
         
-        return (
-            <div className="Login">
-                {errMessage}
-                {returnedView}
-            </div>
-        );
+        if (returnedView != null)
+            return (
+                <div className="Login">
+                    {errMessage}
+                    {returnedView}
+                </div>
+            );
+        else
+            return (
+                <div></div>
+            )
     }
 }
 
