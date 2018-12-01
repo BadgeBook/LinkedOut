@@ -43,7 +43,7 @@ class ViewAllConversations extends Component {
     };
 
     render() {
-        if (this.state.recipients) {
+        if (this.state.recipients && this.state.userId) {
             return (
                 <div className="ViewAllConversations">
                     <div className="d-flex justify-content-center">
@@ -66,9 +66,9 @@ class ViewAllConversations extends Component {
                     <div className="d-flex justify-content-center">
                         <SearchBar history={this.props.history}/>
                     </div>
-                    <h1>No open conversations</h1>
+                    <div className="not-signed-in-message d-flex justify-content-center"><h1>Sign In To View</h1></div>
                 </div>
-            )
+            );
         }
     }
 }
