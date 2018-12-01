@@ -3,7 +3,7 @@ import './badgeList.css';
 
 const BadgeList = (props) => {
     let userBadges = sessionStorage.getItem("_badges");
-    userBadges = JSON.parse(userBadges)
+    userBadges = JSON.parse(userBadges);
     let i;
     for (i=0; i<userBadges.length; i++) {
         userBadges[i] = userBadges[i].appname + " " 

@@ -1,0 +1,9 @@
+.SingleMessage .sender {
+    background-color: lightblue;
+    text-align: right;
+}
+
+.SingleMessage .receiver {
+    background-color: ghostwhite;
+    text-align: left;
+}

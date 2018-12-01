@@ -36,7 +36,18 @@ class Homepage extends Component {
                     <SearchBar history={this.props.history}/>
                 </div>
                 <h2>Landing Page</h2>
-                <button className="btn btn-success" onClick={() => window.location.href = '/profile'}>Go to profile</button>
+                <div className="v-spacing">
+                    <button
+                        className="btn btn-success h-spacing"
+                        onClick={() => window.location.href = '/profile'}>
+                        Go to profile
+                    </button>
+                    <button
+                        className="btn btn-success h-spacing"
+                        onClick={() => window.location.href = '/allConversations'}>
+                        View Conversations
+                    </button>
+                </div>
                 <div className="AppCardsList">
                     <AppCardsList applications={this.state.applications}/>
                 </div>

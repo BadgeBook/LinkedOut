@@ -82,7 +82,7 @@ function getUser(user, callback) {
     let db_connection = mysql.createConnection(db_config);
 
     db_connection.query(
-        "SELECT fullname, icon, description " +
+        "SELECT * " +
         "      FROM user " +
         "     WHERE id = ?",
         [user.userId],
@@ -179,23 +179,23 @@ function getUserApplications(user, callback) {
     db_connection.end();
 }
 
-function getConversations(userId, callback) {
+function getConversations(user, callback) {
     let db_connection = mysql.createConnection(db_config);
 
     db_connection.query(
-        "SELECT u.id, u.username" +
+        "SELECT *" +
         "      FROM user u" +
         "     INNER JOIN (" +
     "                    (SELECT m.user_id_receiver" +
     "                       FROM messages m" +
-    "                      WHERE m.user_id_sender = 1141)" +
+    "                      WHERE m.user_id_sender = ?)" +
     "                 UNION" +
     "                    (SELECT m.user_id_sender" +
     "                       FROM messages m" +
-    "                      WHERE m.user_id_receiver = 1141)" +
+    "                      WHERE m.user_id_receiver = ?)" +
     "                ) m" +
         "        ON u.id = m.user_id_receiver",
-        [userId, userId, userId, userId, userId],
+        [user.userId, user.userId],
         function (err, users) {
             if (err) {
                 callback(err, null);

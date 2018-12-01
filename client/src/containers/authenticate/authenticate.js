@@ -118,7 +118,7 @@ class Authenticate extends Component {
                     </label>
                 </form>
                 <button
-                    className="btn btn-warning"
+                    className="btn btn-warning h-spacing"
                     type="button"
                     onClick={() => {
                         this.onLoginClicked(userName.current.value, password.current.value);
@@ -126,7 +126,7 @@ class Authenticate extends Component {
                     Log In
                 </button>
                 <button
-                    className="btn btn-info"
+                    className="btn btn-info h-spacing"
                     type="button"
                     onClick={() => {
                         this.onSignUpClicked(userName.current.value, password.current.value)
