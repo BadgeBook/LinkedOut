@@ -282,7 +282,7 @@ function getApplicationInfo(res, callback) {
     let db_connection = mysql.createConnection(db_config);
 
     db_connection.query(
-        "SELECT id, name" +
+        "SELECT id, name, outgoingToken" +
         "      FROM application " +
         "      WHERE incomingToken = ?",
         [res.token],
@@ -298,14 +298,12 @@ function getApplicationInfo(res, callback) {
 
 function getApplicationUser(userApp, callback) {
     let db_connection = mysql.createConnection(db_config);
-
     db_connection.query(
-        "SELECT au.id " +
-        "      FROM application a" +
-        "      JOIN application_user au ON a.id = a.application_id" +
-        "      WHERE au.user_id = ?" +
-        "        AND a.outgoingToken = ?",
-        [userApp.user, userApp.token],
+        "SELECT id " +
+        "      FROM application_user" +
+        "      WHERE user_id = ?" +
+        "        AND application_id = ?",
+        [userApp.user, userApp.application],
         function (err, result) {
             if (err) {
                 callback(err, null);

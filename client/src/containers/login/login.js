@@ -72,6 +72,7 @@ class Login extends Component {
 
         sessionStorage.clear();
         sessionStorage.setItem("_id", response.data.id);
+        window.location.reload();
     };
 
     checkAppPermission = (user, application) => {
@@ -85,26 +86,27 @@ class Login extends Component {
     }
 
     onPermissionClicked = (user, application) => {
-        console.log(user)
-        console.log(application)
         axios.post('/api/givePermission', {
             user: user,
             application: application
         })
             .then(response => {
-                axios.post(this.state.appURL, {
-                    userid: this.state.userId,
-                    apptoken: this.state.appToken
-                })
-            });
+                this.redirect()
+            }); 
+    }
+
+    redirect = () => {
+        axios.post('/api/redirectExternalApp', {
+            userid: this.state.userId,
+            apptoken: this.state.appToken,
+            URL: this.state.appURL
+        })
     }
 
     render() {
         let userName = React.createRef();
         let password = React.createRef();
         let externalURL = window.location.href.split("#");
-        console.log(externalURL[1])
-        console.log(externalURL[2])
 
         let errMessage;
         if (this.state.error) {
@@ -151,10 +153,7 @@ class Login extends Component {
             })
                 .then(response => {
                     if (response.data.length > 0) {
-                        axios.post(this.state.appURL, {
-                            userid: this.state.userId,
-                            apptoken: this.state.appToken
-                        })
+                        this.redirect()
                     } else {
                         let loginDiv = document.createElement("DIV")
                         loginDiv.setAttribute("class", "Login")
