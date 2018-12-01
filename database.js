@@ -233,7 +233,7 @@ function sendMessage(message, callback) {
             if (err) {
                 callback(err, null);
             }
-            callback(null, result.affectedRows);
+            callback(null, "success");
         });
 
     db_connection.end();
