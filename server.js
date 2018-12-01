@@ -78,7 +78,8 @@ app.post('/api/getUserBadges', (req, res, next) => {
     db.getUserApplications(req.body, function(err, user) {
         if (err) {
             res.send(err);
-        } else {
+        } 
+        else if (user) {
             user = JSON.parse(user);
             axiosUsers = [];
 
@@ -101,6 +102,9 @@ app.post('/api/getUserBadges', (req, res, next) => {
                 .catch((err) => {
                     console.log(err);
             });
+        }
+        else {
+            res.send([])
         }
     });
 });
@@ -133,6 +137,53 @@ app.post('/api/sendMessage', (req, res, next) => {
             res.send(success)
         }
     });
+});
+
+app.post('/api/getApplicationUser', (req, res, next) => {
+    db.getApplicationUser(req.body, function(err, success) {
+        if (err) {
+            res.send(err);
+        } else {
+            res.send(success)
+        }
+    });
+});
+
+app.post('/api/givePermission', (req, res, next) => {
+    db.givePermission(req.body, function(err, userApp) {
+        if (err) {
+            res.send(err);
+        } else {
+            res.send(userApp);
+        }
+    });
+});
+
+app.post('/api/getApplicationInfo', (req, res, next) => {
+    db.getApplicationInfo(req.body, function(err, application) {
+        if (err) {
+            res.send(err);
+        } else {
+            res.send(application)
+        }
+    });
+});
+
+app.post('/api/getApplicationUser', (req, res, next) => {
+    db.getApplicationUser(req.body, function(err, userApp) {
+        if (err) {
+            res.send(err);
+        } else {
+            res.send(userApp)
+        }
+    });
+});
+
+app.post('/api/redirectExternalApp', (req, res, next) => {
+    axios.post(req.body.URL, {
+        userid: req.body.userid,
+        apptoken: req.body.apptoken
+    })
 });
 
 app.listen(process.env.PORT || 4000, () => {

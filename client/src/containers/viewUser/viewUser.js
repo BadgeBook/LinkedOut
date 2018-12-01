@@ -24,9 +24,6 @@ class ViewUser extends Component {
                                 <h2 className="card-title">{this.state.user.fullname}</h2>
                                 <div dangerouslySetInnerHTML={{__html: this.state.user.description}}/>
                             </div>
-                            <div>
-                                {/*@TODO: Add badges*/}
-                            </div>
                         </div>
                     </div>
                 </div>
