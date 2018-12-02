@@ -169,6 +169,16 @@ app.post('/api/getApplicationInfo', (req, res, next) => {
     });
 });
 
+app.post('/api/getUserInfo', (req, res, next) => {
+    db.getUserInfo(req.body, function(err, user) {
+        if (err) {
+            res.send(err);
+        } else {
+            res.send(user)
+        }
+    });
+});
+
 app.post('/api/getApplicationUser', (req, res, next) => {
     db.getApplicationUser(req.body, function(err, userApp) {
         if (err) {
@@ -177,13 +187,6 @@ app.post('/api/getApplicationUser', (req, res, next) => {
             res.send(userApp)
         }
     });
-});
-
-app.post('/api/redirectExternalApp', (req, res, next) => {
-    axios.post(req.body.URL, {
-        userid: req.body.userid,
-        apptoken: req.body.apptoken
-    })
 });
 
 app.listen(process.env.PORT || 4000, () => {
