@@ -96,8 +96,13 @@ class Login extends Component {
     }
 
     redirect = () => {
-        window.location.href = this.state.appURL 
-            + "#" + this.state.userId + '#' + this.state.appToken
+        axios.post('/api/getUserInfo', {
+            userId: this.state.userId
+        }) .then(response => {
+            console.log(response.data[0].username)
+            window.location.href = this.state.appURL 
+            + "#" + response.data[0].username + '#' + this.state.appToken
+        })
     }
 
     render() {

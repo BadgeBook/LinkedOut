@@ -169,6 +169,16 @@ app.post('/api/getApplicationInfo', (req, res, next) => {
     });
 });
 
+app.post('/api/getUserInfo', (req, res, next) => {
+    db.getUserInfo(req.body, function(err, user) {
+        if (err) {
+            res.send(err);
+        } else {
+            res.send(user)
+        }
+    });
+});
+
 app.post('/api/getApplicationUser', (req, res, next) => {
     db.getApplicationUser(req.body, function(err, userApp) {
         if (err) {

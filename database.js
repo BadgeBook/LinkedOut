@@ -296,6 +296,24 @@ function getApplicationInfo(res, callback) {
     db_connection.end();
 }
 
+function getUserInfo(res, callback) {
+    let db_connection = mysql.createConnection(db_config);
+
+    db_connection.query(
+        "SELECT username" +
+        "      FROM user " +
+        "      WHERE id = ?",
+        [res.userId],
+        function (err, result) {
+            if (err) {
+                callback(err, null);
+            }
+            callback(null, result);
+        });
+
+    db_connection.end();
+}
+
 function getApplicationUser(userApp, callback) {
     let db_connection = mysql.createConnection(db_config);
     db_connection.query(
@@ -319,5 +337,5 @@ module.exports = {
     getUser, updateUser,
     getApplications, getUserApplications,
     getConversations, getMessages, sendMessage, 
-    getApplicationUser, givePermission, getApplicationInfo
+    getApplicationUser, givePermission, getApplicationInfo, getUserInfo
 };
