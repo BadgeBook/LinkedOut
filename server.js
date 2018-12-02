@@ -179,13 +179,6 @@ app.post('/api/getApplicationUser', (req, res, next) => {
     });
 });
 
-app.post('/api/redirectExternalApp', (req, res, next) => {
-    axios.post(req.body.URL, {
-        userid: req.body.userid,
-        apptoken: req.body.apptoken
-    })
-});
-
 app.listen(process.env.PORT || 4000, () => {
     console.log('Listening on port 4000');
 });

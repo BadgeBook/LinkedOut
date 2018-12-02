@@ -96,11 +96,8 @@ class Login extends Component {
     }
 
     redirect = () => {
-        axios.post('/api/redirectExternalApp', {
-            userid: this.state.userId,
-            apptoken: this.state.appToken,
-            URL: this.state.appURL
-        })
+        window.location.href = this.state.appURL 
+            + "#" + this.state.userId + '#' + this.state.appToken
     }
 
     render() {
