@@ -16,6 +16,23 @@ class UserInfo extends Component {
         };
     }
 
+    quillModules = {
+        toolbar: [
+            [{ 'header': [1, 2, false] }],
+            ['bold', 'italic', 'underline', 'blockquote'],
+            [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
+            ['link', 'image'],
+            ['clean']
+        ],
+    };
+
+    quillFormats = [
+        'header',
+        'bold', 'italic', 'underline', 'strike', 'blockquote',
+        'list', 'bullet', 'indent',
+        'link', 'image'
+    ];
+
     componentDidMount() {
         let userId = sessionStorage.getItem("_id");
         if (userId) {
@@ -24,6 +41,7 @@ class UserInfo extends Component {
     }
 
     handleTextChange = (value) => {
+        console.log(value);
         this.setState({
             editMode: true,
             text: value,
@@ -99,7 +117,12 @@ class UserInfo extends Component {
         let descriptionButton = null;
 
         if (this.state.editMode) {
-            descriptionText = <ReactQuill value={this.state.text} onChange={this.handleTextChange} />;
+            descriptionText = <ReactQuill
+                value={this.state.text}
+                onChange={this.handleTextChange}
+                modules={this.quillModules}
+                formats={this.quillFormats}
+            />;
             descriptionButton = <button
                 className="btn btn-info"
                 onClick={this.onSaveChangesClick}>
