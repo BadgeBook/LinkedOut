@@ -12,6 +12,7 @@ const db_config = {
 
 // SQL queries
 function search(query, callback) {
+    query = query.replace(/<(.|\n)*?>/g, '');
     let db_connection = mysql.createConnection(db_config);
     let words = query.toString().split(' ');
 
