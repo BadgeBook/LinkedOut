@@ -148,7 +148,7 @@ class UserInfo extends Component {
                         <div className="card-body">
                             <div className="row">
                                 <div className="col-md-3">
-                                    <img alt="..." className="img-thumbnail" src={this.state.user.icon}/>
+                                    {/*<img alt="..." className="img-thumbnail" src={this.state.user.icon}/>*/}
                                 </div>
                                 <div className="col-md-6 profile-info">
                                     <h2 className="card-title">{this.state.user.fullname}</h2>
@@ -173,7 +173,7 @@ class UserInfo extends Component {
                         <div className="card-body">
                             <div className="row">
                                 <div className="col-md-3">
-                                    <img alt="..." className="img-thumbnail" src={this.state.user.icon}/>
+                                    {/*<img alt="..." className="img-thumbnail" src={this.state.user.icon}/>*/}
                                 </div>
                                 <div className="col-md-6 profile-info">
                                     <h2 className="card-title">{this.state.user.fullname}</h2>
