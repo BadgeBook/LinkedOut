@@ -30,11 +30,6 @@ class SearchPage extends Component {
     };
 
     render() {
-        // Redirect back to profile if search string is empty
-        if (!this.props.location.state) {
-            this.props.history.push('/profile');
-        }
-
         // Display found users
         return (
             <div className="SearchPage">
