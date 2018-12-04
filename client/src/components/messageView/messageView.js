@@ -1,6 +1,7 @@
 import React from 'react';
 import './messageView.css';
 import SingleMessage from '../singleMessage/singleMessage'
+import SendPrivateMessage from '../../containers/sendPrivateMessage/sendPrivateMessage'
 
 const MessageView = (props) => {
     return (
@@ -26,6 +27,7 @@ const MessageView = (props) => {
                     })
                 }
             </ul>
+            <SendPrivateMessage fromUser={props.fromUser} toUser={props.toUser}/>
         </div>
     );
 };
