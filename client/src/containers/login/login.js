@@ -17,7 +17,7 @@ class Login extends Component {
     updateAuthenticationState = () => {
         let userId = sessionStorage.getItem('_id');
         let externalURL = window.location.href.split("#");
-        let appInfo = []
+        let appInfo = [];
 
         axios.post('/api/getApplicationInfo', {
             token: externalURL[2]
@@ -83,7 +83,7 @@ class Login extends Component {
             .then(response => {
                 return response;
             });
-    }
+    };
 
     onPermissionClicked = (user, application) => {
         axios.post('/api/givePermission', {
@@ -93,17 +93,17 @@ class Login extends Component {
             .then(response => {
                 this.redirect()
             }); 
-    }
+    };
 
     redirect = () => {
         axios.post('/api/getUserInfo', {
             userId: this.state.userId
         }) .then(response => {
-            console.log(response.data[0].username)
+            console.log(response.data[0].username);
             window.location.href = this.state.appURL 
             + "#" + response.data[0].username + '#' + this.state.appToken
         })
-    }
+    };
 
     render() {
         let userName = React.createRef();
@@ -157,21 +157,21 @@ class Login extends Component {
                     if (response.data.length > 0) {
                         this.redirect()
                     } else {
-                        let loginDiv = document.createElement("DIV")
-                        loginDiv.setAttribute("class", "Login")
+                        let loginDiv = document.createElement("DIV");
+                        loginDiv.setAttribute("class", "Login");
 
-                        let msg = document.createElement("P")
-                        msg.setAttribute("class", "app-permission")
-                        msg.innerHTML = "Allow " + this.state.appName + " permission to access your LinkedOut profile?"
+                        let msg = document.createElement("P");
+                        msg.setAttribute("class", "app-permission");
+                        msg.innerHTML = "Allow " + this.state.appName + " permission to access your LinkedOut profile?";
                         
-                        let button = document.createElement("BUTTON")
-                        button.setAttribute("class", "btn btn-warning")
-                        button.setAttribute("type", "button")
-                        button.onclick = () => {this.onPermissionClicked(this.state.userId, this.state.appId)}
-                        button.innerHTML = "Yes"
+                        let button = document.createElement("BUTTON");
+                        button.setAttribute("class", "btn btn-warning");
+                        button.setAttribute("type", "button");
+                        button.onclick = () => {this.onPermissionClicked(this.state.userId, this.state.appId)};
+                        button.innerHTML = "Yes";
                         
-                        loginDiv.append(msg)
-                        loginDiv.append(button)
+                        loginDiv.append(msg);
+                        loginDiv.append(button);
                         document.getElementById("root").append(loginDiv)
                     }
                 });

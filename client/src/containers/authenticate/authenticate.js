@@ -29,15 +29,25 @@ class Authenticate extends Component {
         }
     };
 
-    onSignUpClicked = (username, password) => {
+    onSignUpClicked = (username, password, name) => {
+        this.setState({
+            signUpClicked: true
+        });
         if (!username || !password) {
             this.setState({
                 error: "Missing username or password"
-            })
-        } else {
+            });
+        }
+        if (!name) {
+            this.setState({
+                error: "Enter your username, password, and full name"
+            });
+        }
+        if (username && password && name) {
             axios.post('/api/signUp', {
                 username: username,
-                password: password
+                password: password,
+                fullname: name
             })
                 .then(response => {
                     this.createUserSession(response)
@@ -84,7 +94,9 @@ class Authenticate extends Component {
 
     render() {
         let userName = React.createRef();
+        let fullName = React.createRef();
         let password = React.createRef();
+        // name.current.value = "";
 
         let errMessage;
         if (this.state.error) {
@@ -96,6 +108,21 @@ class Authenticate extends Component {
             successMessage = <h5 className="successMessage">"Logged in!"</h5>;
             errMessage = ""
         }
+
+        let nameInput = <div ref={(fullName)}/>;
+
+        if (this.state.signUpClicked) {
+            nameInput =
+                <label>
+                    <input
+                        type="text"
+                        name="name"
+                        placeholder="Name"
+                        ref={(fullName)}>
+                    </input>
+                </label>;
+        }
+
 
         let signInView =
             <div>
@@ -116,6 +143,7 @@ class Authenticate extends Component {
                             ref={(password)}>
                         </input>
                     </label>
+                    {nameInput}
                 </form>
                 <button
                     className="btn btn-warning h-spacing"
@@ -129,7 +157,7 @@ class Authenticate extends Component {
                     className="btn btn-info h-spacing"
                     type="button"
                     onClick={() => {
-                        this.onSignUpClicked(userName.current.value, password.current.value)
+                        this.onSignUpClicked(userName.current.value, password.current.value, fullName.current.value)
                     }}>
                     Sign Up
                 </button>
