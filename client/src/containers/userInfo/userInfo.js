@@ -123,11 +123,11 @@ class UserInfo extends Component {
                 modules={this.quillModules}
                 formats={this.quillFormats}
             />;
-            descriptionButton = <button
+            descriptionButton = <div><button
                 className="btn btn-info"
                 onClick={this.onSaveChangesClick}>
                 Save Changes
-            </button>;
+            </button> Maximum image size: 250x250</div>;
         } else {
             descriptionText = <div className="description" dangerouslySetInnerHTML={{__html: this.state.text}} />;
             descriptionButton = <button
