@@ -13,7 +13,7 @@ class SendPrivateMessage extends Component {
                 user_id_sender: this.props.fromUser.id,
                 user_id_receiver: this.props.toUser.id,
                 content: message,
-                timestamp: ""
+                timestamp: new Date().toJSON().replace("T", " ").replace("Z","").slice(0,-4) //YYYY-MM-DD HH:MM:SS
             })
                 .then(/**Callback?*/);
         }
