@@ -39,7 +39,7 @@ function signUp(user, callback) {
             .update(user.password).digest("hex");
 
     db_connection.query(
-        "INSERT INTO user (username, password, fullname) VALUES(?, ?)",
+        "INSERT INTO user (username, password, fullname) VALUES(?, ?, ?)",
         [user.username, user.password, user.fullname],
         function (err, res) {
             if (err) {
