@@ -13,20 +13,38 @@ const db_config = {
 // SQL queries
 function search(query, callback) {
     let db_connection = mysql.createConnection(db_config);
-    let words = query.toString().replace(/ /g, '|');
+    let words = query.toString().split(' ');
+
+    let db_query =
+        "SELECT * \n" +
+        "  FROM (SELECT * \n" +
+        "          FROM user u \n" +
+        "         WHERE u.username REGEXP '~' \n" +
+        "            OR u.fullname REGEXP '~' \n" +
+        "            OR u.description REGEXP '~' ) a\n";
+    db_query = db_query.replace(/~/g, words[0]);
+
+    for (let i = 1; i < words.length; i++) {
+        let character = String.fromCharCode(97 + i);
+        db_query = db_query +
+            " INNER JOIN (SELECT *\n" +
+            "               FROM user u\n" +
+            "             HAVING u.username REGEXP '" + words[i] + "'\n" +
+            "                 OR u.fullname REGEXP '" + words[i] + "'\n" +
+            "                 OR u.description REGEXP '" + words[i] +
+            "') " + character + "\n" +
+            "    ON a.id = " + character + ".id";
+    }
 
     db_connection.query(
-        "SELECT * " +
-        "      FROM user " +
-        "     WHERE username REGEXP ?" +
-        "        OR fullname REGEXP ?" +
-        "        OR description REGEXP ?",
-        [words, words, words],
+        db_query,
+        [],
         function (err, result) {
             if (err) {
-                callback(err, null);
+                callback({errorMessage: err.sqlMessage}, null);
+            } else {
+                callback(null, JSON.stringify(result));
             }
-            callback(null, JSON.stringify(result));
         });
 
     db_connection.end();
