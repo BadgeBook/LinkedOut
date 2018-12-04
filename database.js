@@ -61,6 +61,9 @@ function signUp(user, callback) {
         [user.username, user.password],
         function (err, res) {
             if (err) {
+                if (err.code === "ER_DUP_ENTRY") {
+                    callback({errorMessage: "User already exists"}, null);
+                } else
                 callback({errorMessage: err.sqlMessage}, null);
             } else {
                 callback(null, {id: res.insertId});
