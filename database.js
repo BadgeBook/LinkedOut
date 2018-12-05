@@ -179,7 +179,7 @@ function getUserApplications(user, callback) {
 
     db_connection.query(
         "SELECT u.id AS user_id, " +
-        "    u.username, a.APIurl, a.outgoingToken" +
+        "    u.username, a.APIurl, a.outgoingToken, a.icon" +
         "     FROM user u " +
         "     JOIN application_user au ON u.id = au.user_id" +
         "     JOIN application a ON au.application_id = a.id" +
@@ -325,24 +325,6 @@ function getUserInfo(res, callback) {
         "      FROM user " +
         "      WHERE id = ?",
         [res.userId],
-        function (err, result) {
-            if (err) {
-                callback(err, null);
-            }
-            callback(null, result);
-        });
-
-    db_connection.end();
-}
-
-function getApplicationUser(userApp, callback) {
-    let db_connection = mysql.createConnection(db_config);
-    db_connection.query(
-        "SELECT id " +
-        "      FROM application_user" +
-        "      WHERE user_id = ?" +
-        "        AND application_id = ?",
-        [userApp.user, userApp.application],
         function (err, result) {
             if (err) {
                 callback(err, null);
