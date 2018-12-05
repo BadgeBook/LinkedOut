@@ -93,10 +93,11 @@ app.post('/api/getUserBadges', (req, res, next) => {
             axios.all(axiosUsers)
                 .then(axios.spread((...results) => {
                     elements = [];
-                    results.map((element) => {
+                    results.map((element, index) => {
+                        element.data["image"] = user[index].icon
                         elements.push(element.data)
                     });
-                    console.log(elements);
+                    console.log(elements)
                     res.send(elements)
                 }))
                 .catch((err) => {
