@@ -41,7 +41,6 @@ class UserInfo extends Component {
     }
 
     handleTextChange = (value) => {
-        console.log(value);
         this.setState({
             editMode: true,
             text: value,
@@ -71,9 +70,6 @@ class UserInfo extends Component {
         axios.post('/api/updateUser', {
             user: user
         })
-            .then(response => {
-                console.log(response);
-            });
     };
 
     getUserBadgesFromDb = (userId) => {
@@ -81,7 +77,6 @@ class UserInfo extends Component {
             userId: userId
     })
         .then(response => {
-            console.log(response)
             sessionStorage.setItem("_badges", JSON.stringify(response.data));
             this.setState({
                 badges: response.data  
@@ -148,17 +143,14 @@ class UserInfo extends Component {
                     <div className="card jumbotron">
                         <div className="card-body">
                             <div className="row">
-                                <div className="col-md-3">
-                                    {/*<img alt="..." className="img-thumbnail" src={this.state.user.icon}/>*/}
-                                </div>
-                                <div className="col-md-6 profile-info">
+                                <div className="col-md-9 profile-info">
                                     <h2 className="card-title">{this.state.user.fullname}</h2>
                                     <div>
                                         {descriptionText}
                                         {descriptionButton}
                                     </div>
                                 </div>
-                                <div className="col-md-2 profile-info">
+                                <div className="col-md-3 profile-info">
                                     <BadgeList badges={this.state.badges}/>
                                 </div>
                             </div>
@@ -173,17 +165,14 @@ class UserInfo extends Component {
                     <div className="card jumbotron">
                         <div className="card-body">
                             <div className="row">
-                                <div className="col-md-3">
-                                    {/*<img alt="..." className="img-thumbnail" src={this.state.user.icon}/>*/}
-                                </div>
-                                <div className="col-md-6 profile-info">
+                                <div className="col-md-9 profile-info">
                                     <h2 className="card-title">{this.state.user.fullname}</h2>
                                     <div>
                                         {descriptionText}
                                         {descriptionButton}
                                     </div>
                                 </div>
-                                <div className="col-md-2 profile-info">
+                                <div className="col-md-3 profile-info">
                                 </div>
                             </div>
                         </div>
