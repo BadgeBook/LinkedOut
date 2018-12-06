@@ -17,10 +17,7 @@ class ViewUser extends Component {
                 <div className="card jumbotron">
                     <div className="card-body">
                         <div className="row">
-                            <div className="col-md-3">
-                                <img alt="..." className="img-thumbnail" src={this.state.user.icon}/>
-                            </div>
-                            <div className="col-md-6 profile-info">
+                            <div className="col-md-8 profile-info">
                                 <h2 className="card-title">{this.state.user.fullname}</h2>
                                 <div dangerouslySetInnerHTML={{__html: this.state.user.description}}/>
                             </div>
