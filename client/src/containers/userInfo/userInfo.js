@@ -136,7 +136,7 @@ class UserInfo extends Component {
             let i;
             for (i=0; i<this.state.badges.length; i++) {
                 this.state.badges[i] = this.state.badges[i].appname + " " 
-                    + this.state.badges[i].badgetype + ": " + this.state.badges[i].value
+                    + this.state.badges[i].badgetype + ": " + this.state.badges[i].valu
             }
             return (
                 <div className="UserInfo">
