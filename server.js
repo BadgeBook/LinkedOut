@@ -78,9 +78,10 @@ app.post('/api/getUserBadges', (req, res, next) => {
     db.getUserApplications(req.body, function(err, user) {
         if (err) {
             res.send(err);
-        } else {
-            user = JSON.parse(user)
-            axiosUsers = []
+        } 
+        else if (user) {
+            user = JSON.parse(user);
+            axiosUsers = [];
 
             for(i=0; i<user.length; i++) {
                 axiosUsers[i] = axios.post(String(user[i].APIurl), {
@@ -91,19 +92,102 @@ app.post('/api/getUserBadges', (req, res, next) => {
 
             axios.all(axiosUsers)
                 .then(axios.spread((...results) => {
-                    elements = []
-                    results.map((element) => {
+                    elements = [];
+                    results.map((element, index) => {
+                        element.data["image"] = user[index].icon
                         elements.push(element.data)
                     });
-                    console.log(elements)
                     res.send(elements)
                 }))
                 .catch((err) => {
                     console.log(err);
             });
         }
+        else {
+            res.send([])
+        }
     });
-})
+});
+
+app.post('/api/getConversations', (req, res, next) => {
+    db.getConversations(req.body, function(err, users) {
+        if (err) {
+            res.send(err);
+        } else {
+            res.send(users)
+        }
+    });
+});
+
+app.post('/api/getMessages', (req, res, next) => {
+    db.getMessages(req.body, function(err, messages) {
+        if (err) {
+            res.send(err);
+        } else {
+            res.send(messages)
+        }
+    });
+});
+
+app.post('/api/sendMessage', (req, res, next) => {
+    db.sendMessage(req.body, function(err, success) {
+        if (err) {
+            res.send(err);
+        } else {
+            res.send(success)
+        }
+    });
+});
+
+app.post('/api/getApplicationUser', (req, res, next) => {
+    db.getApplicationUser(req.body, function(err, success) {
+        if (err) {
+            res.send(err);
+        } else {
+            res.send(success)
+        }
+    });
+});
+
+app.post('/api/givePermission', (req, res, next) => {
+    db.givePermission(req.body, function(err, userApp) {
+        if (err) {
+            res.send(err);
+        } else {
+            res.send(userApp);
+        }
+    });
+});
+
+app.post('/api/getApplicationInfo', (req, res, next) => {
+    db.getApplicationInfo(req.body, function(err, application) {
+        if (err) {
+            res.send(err);
+        } else {
+            res.send(application)
+        }
+    });
+});
+
+app.post('/api/getUserInfo', (req, res, next) => {
+    db.getUserInfo(req.body, function(err, user) {
+        if (err) {
+            res.send(err);
+        } else {
+            res.send(user)
+        }
+    });
+});
+
+app.post('/api/getApplicationUser', (req, res, next) => {
+    db.getApplicationUser(req.body, function(err, userApp) {
+        if (err) {
+            res.send(err);
+        } else {
+            res.send(userApp)
+        }
+    });
+});
 
 app.listen(process.env.PORT || 4000, () => {
     console.log('Listening on port 4000');

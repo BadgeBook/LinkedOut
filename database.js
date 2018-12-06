@@ -1,6 +1,8 @@
 // ClearDB Database Setup
 const mysql = require('mysql');
+const crypto = require('crypto');
 
+const secret = "webdev";
 const db_config = {
     host: "us-cdbr-iron-east-01.cleardb.net",
     user: "b55be0f1d3c7ce",
@@ -10,21 +12,40 @@ const db_config = {
 
 // SQL queries
 function search(query, callback) {
+    query = query.replace(/<(.|\n)*?>/g, '');
     let db_connection = mysql.createConnection(db_config);
-    let words = query.toString().replace(/ /g, '|');
+    let words = query.toString().split(' ');
+
+    let db_query =
+        "SELECT * \n" +
+        "  FROM (SELECT * \n" +
+        "          FROM user u \n" +
+        "         WHERE u.username REGEXP '~' \n" +
+        "            OR u.fullname REGEXP '~' \n" +
+        "            OR u.description REGEXP '~' ) a\n";
+    db_query = db_query.replace(/~/g, words[0]);
+
+    for (let i = 1; i < words.length; i++) {
+        let character = String.fromCharCode(97 + i);
+        db_query = db_query +
+            " INNER JOIN (SELECT *\n" +
+            "               FROM user u\n" +
+            "             HAVING u.username REGEXP '" + words[i] + "'\n" +
+            "                 OR u.fullname REGEXP '" + words[i] + "'\n" +
+            "                 OR u.description REGEXP '" + words[i] +
+            "') " + character + "\n" +
+            "    ON a.id = " + character + ".id";
+    }
 
     db_connection.query(
-        "SELECT * " +
-        "      FROM user " +
-        "     WHERE username REGEXP ?" +
-        "        OR fullname REGEXP ?" +
-        "        OR description REGEXP ?",
-        [words, words, words],
+        db_query,
+        [],
         function (err, result) {
             if (err) {
-                callback(err, null);
+                callback({errorMessage: err.sqlMessage}, null);
+            } else {
+                callback(null, JSON.stringify(result));
             }
-            callback(null, JSON.stringify(result));
         });
 
     db_connection.end();
@@ -33,14 +54,21 @@ function search(query, callback) {
 function signUp(user, callback) {
     let db_connection = mysql.createConnection(db_config);
 
+    user.password = crypto.createHmac('sha256', secret)
+            .update(user.password).digest("hex");
+
     db_connection.query(
-        "INSERT INTO user (username, password) VALUES(?, ?)",
-        [user.username, user.password],
-        function (err, result) {
+        "INSERT INTO user (username, password, fullname) VALUES(?, ?, ?)",
+        [user.username, user.password, user.fullname],
+        function (err, res) {
             if (err) {
-                callback(err, null);
+                if (err.code === "ER_DUP_ENTRY") {
+                    callback({errorMessage: "User already exists"}, null);
+                } else
+                callback({errorMessage: err.sqlMessage}, null);
+            } else {
+                callback(null, {id: res.insertId});
             }
-            callback(null, {id: result.insertId});
         });
 
     db_connection.end();
@@ -48,6 +76,9 @@ function signUp(user, callback) {
 
 function login(user, callback) {
     let db_connection = mysql.createConnection(db_config);
+
+    user.password = crypto.createHmac('sha256', secret)
+        .update(user.password).digest("hex");
 
     db_connection.query(
         "SELECT id " +
@@ -57,9 +88,13 @@ function login(user, callback) {
         [user.username, user.password],
         function (err, result) {
             if (err) {
-                callback(err, null);
+                callback({errorMessage: err}, null);
+            } else
+            if (!result[0]) {
+                callback({errorMessage: "Your username or password is incorrect"}, null);
+            } else {
+                callback(null, {id: result[0].id});
             }
-            callback(null, {id: result[0].id});
         });
 
     db_connection.end();
@@ -69,7 +104,7 @@ function getUser(user, callback) {
     let db_connection = mysql.createConnection(db_config);
 
     db_connection.query(
-        "SELECT fullname, icon, description " +
+        "SELECT * " +
         "      FROM user " +
         "     WHERE id = ?",
         [user.userId],
@@ -77,8 +112,6 @@ function getUser(user, callback) {
             if (err) {
                 callback(err, null);
             }
-            //TODO fix hardcoded badges array
-            // result["badges"] = ["badge1", "badge2", "badge3"];
             callback(null, JSON.stringify(result));
         });
 
@@ -147,12 +180,64 @@ function getUserApplications(user, callback) {
 
     db_connection.query(
         "SELECT u.id AS user_id, " +
-        "    u.username, a.APIurl, a.outgoingToken" +
+        "    u.username, a.APIurl, a.outgoingToken, a.icon" +
         "     FROM user u " +
         "     JOIN application_user au ON u.id = au.user_id" +
         "     JOIN application a ON au.application_id = a.id" +
         "     WHERE u.id = ?",
         [user.userId],
+        function (err, result) {
+            if (err) {
+                callback(err, null);
+            } 
+            else if (!result[0]) {
+                callback(null, null);
+            } 
+            else {
+                callback(null, JSON.stringify(result));
+            }
+        });
+
+    db_connection.end();
+}
+
+function getConversations(user, callback) {
+    let db_connection = mysql.createConnection(db_config);
+
+    db_connection.query(
+        "SELECT *" +
+        "      FROM user u" +
+        "     INNER JOIN (" +
+    "                    (SELECT m.user_id_receiver" +
+    "                       FROM messages m" +
+    "                      WHERE m.user_id_sender = ?)" +
+    "                 UNION" +
+    "                    (SELECT m.user_id_sender" +
+    "                       FROM messages m" +
+    "                      WHERE m.user_id_receiver = ?)" +
+    "                ) m" +
+        "        ON u.id = m.user_id_receiver",
+        [user.userId, user.userId],
+        function (err, users) {
+            if (err) {
+                callback(err, null);
+            }
+            callback(null, JSON.stringify(users));
+        });
+
+    db_connection.end();
+}
+
+function getMessages(users, callback) {
+    let db_connection = mysql.createConnection(db_config);
+
+    db_connection.query(
+        "SELECT *" +
+        "      FROM messages" +
+        "     WHERE (? = user_id_sender AND ? = user_id_receiver)" +
+        "        OR (? = user_id_receiver AND ? = user_id_sender)" +
+        "     ORDER BY timestamp ASC",
+        [users.user_id_sender, users.user_id_receiver, users.user_id_sender, users.user_id_receiver],
         function (err, result) {
             if (err) {
                 callback(err, null);
@@ -163,6 +248,98 @@ function getUserApplications(user, callback) {
     db_connection.end();
 }
 
+function sendMessage(message, callback) {
+    let db_connection = mysql.createConnection(db_config);
+
+    db_connection.query(
+        "INSERT INTO messages (user_id_sender, user_id_receiver, content, timestamp) VALUES(?, ?, ?, ?)",
+        [message.user_id_sender, message.user_id_receiver, message.content, message.timestamp],
+        function (err, result) {
+            if (err) {
+                callback(err, null);
+            }
+            callback(null, "success");
+        });
+
+        db_connection.end();
+}
+
+function getApplicationUser(userApp, callback) {
+    let db_connection = mysql.createConnection(db_config);
+    db_connection.query(
+        "SELECT id" +
+        "      FROM application_user " +
+        "      WHERE user_id = ?" +
+        "        AND application_id = ?",
+        [userApp.user, userApp.application],
+        function (err, result) {
+            if (err) {
+                callback(err, null);
+            } else {
+                callback(null, result);
+            }
+        });
+
+    db_connection.end();
+}
+
+function givePermission(userApp, callback) {
+    let db_connection = mysql.createConnection(db_config);
+
+    db_connection.query(
+        "INSERT INTO application_user (user_id, application_id) VALUES(?, ?)",
+        [userApp.user, userApp.application],
+        function (err, res) {
+            if (err) {
+                callback({errorMessage: err.sqlMessage}, null);
+            } else {
+                callback(null, {id: res.insertId});
+            }
+        });
+
+    db_connection.end();
+}
+
+function getApplicationInfo(res, callback) {
+    let db_connection = mysql.createConnection(db_config);
+
+    db_connection.query(
+        "SELECT id, name, outgoingToken" +
+        "      FROM application " +
+        "      WHERE incomingToken = ?",
+        [res.token],
+        function (err, result) {
+            if (err) {
+                callback(err, null);
+            }
+            callback(null, JSON.stringify(result));
+        });
+
+    db_connection.end();
+}
+
+function getUserInfo(res, callback) {
+    let db_connection = mysql.createConnection(db_config);
+
+    db_connection.query(
+        "SELECT username" +
+        "      FROM user " +
+        "      WHERE id = ?",
+        [res.userId],
+        function (err, result) {
+            if (err) {
+                callback(err, null);
+            }
+            callback(null, result);
+        });
+
+    db_connection.end();
+}
+
 module.exports = {
-    search, signUp, login, getUser, updateUser, getApplications, getUserApplications
+    search, signUp, login,
+    getUser, updateUser,
+    getApplications, getUserApplications,
+    getConversations, getMessages, sendMessage, 
+    getApplicationUser, givePermission, getApplicationInfo, getUserInfo
 };

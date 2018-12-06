@@ -1,4 +1,9 @@
 .BadgeList .badge{
     font-size: 17px;
-    margin-top: 10px;    
+    margin-top: 10px;   
+    font-family: monospace; 
+}
+
+.badgevalue {
+    font-size: 12px;
 }

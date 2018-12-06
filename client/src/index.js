@@ -4,7 +4,10 @@ import Homepage from './containers/homepage/homepage'
 import Profile from './containers/profile/profile'
 import SearchPage from './containers/searchPage/searchPage'
 import Login from './containers/login/login'
-import App from './App';
+import ViewUser from './containers/viewUser/viewUser'
+import InternalMessaging from './containers/internalMessaging/internalMessaging'
+import ViewAllConversations from "./containers/viewAllConversations/viewAllConversations";
+//import App from './App';
 
 import {
     Route,
@@ -26,6 +29,9 @@ ReactDOM.render(
             <Route exact path="/profile" component = {Profile} />
             <Route exact path="/search" component = {SearchPage} />
             <Route exact path="/login" component = {Login} />
+            <Route exact path="/viewUser" component = {ViewUser} />
+            <Route exact path="/messageUser" component = {InternalMessaging} />
+            <Route exact path="/allConversations" component = {ViewAllConversations} />
         </Switch>
     </Router>,
     document.getElementById('root')

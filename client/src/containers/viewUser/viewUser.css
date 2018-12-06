@@ -1,0 +1,14 @@
+.UserInfo {
+    margin-top: 1vh;
+    margin-bottom: 2vh;
+}
+
+.UserInfo .profile-info {
+    text-align: center;
+    margin-top: 2vh;
+}
+
+.UserInfo .description {
+    margin-top: 2vh;
+    text-align: left;
+}

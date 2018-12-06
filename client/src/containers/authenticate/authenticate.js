@@ -10,19 +10,44 @@ class Authenticate extends Component {
         }
     }
 
-    onSignUpClicked = (username, password) => {
-        if (!username || !password) {
+    componentDidMount() {
+        this.updateAuthenticationState();
+    }
+
+    updateAuthenticationState = () => {
+        let userId = sessionStorage.getItem('_id');
+        if (userId) {
             this.setState({
-                error: "Missing username or password"
+                props: this.state.props,
+                userId: userId
             })
         } else {
             this.setState({
-                username: username,
-                password: password
+                props: this.state.props,
+                userId: null
+            })
+        }
+    };
+
+    onSignUpClicked = (username, password, name) => {
+        this.setState({
+            signUpClicked: true
+        });
+        if (!username || !password) {
+            this.setState({
+                error: "Missing username or password"
             });
+        }
+        if (!name) {
+            this.setState({
+                error: "Enter your username, password, and full name"
+            });
+        }
+        if (username && password && name) {
             axios.post('/api/signUp', {
                 username: username,
-                password: password
+                password: password,
+                fullname: name
             })
                 .then(response => {
                     this.createUserSession(response)
@@ -36,10 +61,6 @@ class Authenticate extends Component {
                 error: "Missing username or password"
             })
         } else {
-            this.setState({
-                username: username,
-                password: password
-            });
             axios.post('/api/login', {
                 username: username,
                 password: password
@@ -48,6 +69,11 @@ class Authenticate extends Component {
                     this.createUserSession(response)
                 });
         }
+    };
+
+    onSignOutClicked = () => {
+        sessionStorage.clear();
+        this.updateAuthenticationState();
     };
 
     createUserSession = (response) => {
@@ -68,7 +94,9 @@ class Authenticate extends Component {
 
     render() {
         let userName = React.createRef();
+        let fullName = React.createRef();
         let password = React.createRef();
+        // name.current.value = "";
 
         let errMessage;
         if (this.state.error) {
@@ -80,11 +108,24 @@ class Authenticate extends Component {
             successMessage = <h5 className="successMessage">"Logged in!"</h5>;
             errMessage = ""
         }
-        
-        return (
-            <div className="Authenticate">
-                {errMessage}
-                {successMessage}
+
+        let nameInput = <div ref={(fullName)}/>;
+
+        if (this.state.signUpClicked) {
+            nameInput =
+                <label>
+                    <input
+                        type="text"
+                        name="name"
+                        placeholder="Name"
+                        ref={(fullName)}>
+                    </input>
+                </label>;
+        }
+
+
+        let signInView =
+            <div>
                 <form action="" className="login-form">
                     <label>
                         <input
@@ -102,23 +143,51 @@ class Authenticate extends Component {
                             ref={(password)}>
                         </input>
                     </label>
+                    {nameInput}
                 </form>
-                <button 
-                    className="btn btn-warning"
+                <button
+                    className="btn btn-warning h-spacing"
                     type="button"
                     onClick={() => {
                         this.onLoginClicked(userName.current.value, password.current.value);
                     }}>
                     Log In
                 </button>
-                <button 
-                    className="btn btn-info"
+                <button
+                    className="btn btn-info h-spacing"
                     type="button"
                     onClick={() => {
-                        this.onSignUpClicked(userName.current.value, password.current.value)
+                        this.onSignUpClicked(userName.current.value, password.current.value, fullName.current.value)
                     }}>
                     Sign Up
                 </button>
+            </div>
+        ;
+
+        let signOutView =
+            <button
+                className="btn btn-danger"
+                type="button"
+                onClick={() => {
+                    this.onSignOutClicked()
+                }}>
+                Sign Out
+            </button>
+        ;
+
+        let returnedView = null;
+
+        if (this.state.userId) {
+            returnedView = signOutView;
+        } else {
+            returnedView = signInView;
+        }
+        
+        return (
+            <div className="Authenticate">
+                {errMessage}
+                {successMessage}
+                {returnedView}
             </div>
         );
     }
