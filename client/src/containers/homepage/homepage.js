@@ -29,13 +29,13 @@ class Homepage extends Component {
     render() {
         return (
             <div className="Homepage">
-                <div className="login d-flex justify-content-center">
-                    <Authenticate history={this.props.history}/>
-                </div>
                 <div className="d-flex justify-content-center">
                     <SearchBar history={this.props.history}/>
                 </div>
                 <h2>Landing Page</h2>
+                <div className="login d-flex justify-content-center">
+                    <Authenticate history={this.props.history}/>
+                </div>
                 <div className="v-spacing">
                     <button
                         className="btn btn-success h-spacing"

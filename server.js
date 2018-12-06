@@ -97,7 +97,6 @@ app.post('/api/getUserBadges', (req, res, next) => {
                         element.data["image"] = user[index].icon
                         elements.push(element.data)
                     });
-                    console.log(elements)
                     res.send(elements)
                 }))
                 .catch((err) => {

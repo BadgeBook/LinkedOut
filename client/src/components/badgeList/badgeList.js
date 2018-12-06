@@ -17,10 +17,10 @@ const BadgeList = (props) => {
                {
                    props.badges.map((badge, index) => {
                     return(
-                    <span className="badge badge-pill badge-warning" key={index}>
-                        <img src={icons[index]} width="50" height="50"></img>
-                        {userBadges[index].appname}<br></br>
-                        {badges[index]}
+                    <span className="badge badge-pill badge-success" key={index}>
+                        <img src={icons[index]} width="30" height="30"></img>
+                        &nbsp;{userBadges[index].appname}<br></br>
+                        <span className="badgevalue">{badges[index]}</span>
                     </span>
                     );
                 })}
